@@ -1,11 +1,18 @@
 {
     "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/global-settings-schema.json",
+    "pacOwnerId": "00000000-0000-0000-0000-000000000999",
+   
     "pacEnvironments": [
         {
             "pacSelector": "epac-dev",
             "cloud": "AzureCloud",
             "tenantId": "16a26745-6bc2-4593-941a-4e1b2a1af52c",
-            "deploymentRootScope": "/providers/Microsoft.Management/managementGroups/EPAC-Dev"
+            "deploymentRootScope": "/providers/Microsoft.Management/managementGroups/EPAC-Dev",
+            "desiredState": {
+                "strategy": "ownedOnly",
+                "keepDfcSecurityAssignments": true
+            },
+            "managedIdentityLocation": "uksouth"
         },
         {
             "pacSelector": "tenant",
