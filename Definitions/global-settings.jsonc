@@ -18,7 +18,12 @@
             "pacSelector": "tenant",
             "cloud": "AzureCloud",
             "tenantId": "16a26745-6bc2-4593-941a-4e1b2a1af52c",
-            "deploymentRootScope": "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+            "deploymentRootScope": "/providers/Microsoft.Management/managementGroups/AlexYoTop",
+            "desiredState": {
+                "strategy": "ownedOnly",
+                "keepDfcSecurityAssignments": true
+            },
+            "managedIdentityLocation": "uksouth"
         }
     ]
 
