@@ -11,11 +11,9 @@
     "description": ""
   },
   "metadata": {
-    "assignedBy": "Alex Young",
-    "parameterScopes": {}
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
   },
-  "overrides": [],
-  "resourceSelectors": [],
   "scope": {
     "epac-dev": [
       "/providers/Microsoft.Management/managementGroups/EPAC-Dev"

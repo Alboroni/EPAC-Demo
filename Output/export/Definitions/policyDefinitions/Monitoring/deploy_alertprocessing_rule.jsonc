@@ -16,10 +16,10 @@
     },
     "version": "1.0.0",
     "parameters": {
-      "AMBAAGServiceUri": {
+      "AMBAAGEHTenantId": {
         "metadata": {
-          "displayName": "Service Uri Webhook ",
-          "description": "Indicates the webhook service uri in a webhook"
+          "displayName": "Event Hub Tenant Id",
+          "description": "Event Hub Tenant Id"
         },
         "type": "String",
         "defaultValue": ""
@@ -96,14 +96,6 @@
         "type": "String",
         "defaultValue": "MonitorDisable"
       },
-      "AMBAAGEHTenantId": {
-        "metadata": {
-          "displayName": "Event Hub Tenant Id",
-          "description": "Event Hub Tenant Id"
-        },
-        "type": "String",
-        "defaultValue": ""
-      },
       "AMBAAGuseAadAuth": {
         "metadata": {
           "displayName": "Use Entra Auth",
@@ -111,6 +103,14 @@
         },
         "type": "String",
         "defaultValue": "false"
+      },
+      "AMBAAGServiceUri": {
+        "metadata": {
+          "displayName": "Service Uri Webhook ",
+          "description": "Indicates the webhook service uri in a webhook"
+        },
+        "type": "String",
+        "defaultValue": ""
       },
       "AMBAEventHubResourceId": {
         "metadata": {

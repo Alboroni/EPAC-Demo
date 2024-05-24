@@ -12,9 +12,10 @@
     },
     "parameters": {
       "effect": {
+        "type": "string",
         "metadata": {
-          "displayName": "Effect",
-          "description": "Enable or disable the execution of the policy"
+          "description": "Enable or disable the execution of the policy",
+          "displayName": "Effect"
         },
         "allowedValues": [
           "Disabled",
@@ -22,22 +23,21 @@
           "Deny",
           "Modify"
         ],
-        "type": "string",
         "defaultValue": "Modify"
       },
       "tagName": {
+        "type": "String",
         "metadata": {
-          "displayName": "Tag Name",
-          "description": "Name of the tag, such as 'environment'"
-        },
-        "type": "String"
+          "description": "Name of the tag, such as 'environment'",
+          "displayName": "Tag Name"
+        }
       },
       "excludedRG": {
-        "metadata": {
-          "displayName": "Excluded Resource Groups",
-          "description": "This array contains all excluded RGs from this policy"
-        },
         "type": "Array",
+        "metadata": {
+          "description": "This array contains all excluded RGs from this policy",
+          "displayName": "Excluded Resource Groups"
+        },
         "defaultValue": [
           "synapseworkspace-managedrg-*",
           "databricks*",
@@ -49,11 +49,11 @@
         ]
       },
       "excludedResourceTypes": {
-        "metadata": {
-          "displayName": "Excluded Resource Types",
-          "description": "Exclude certain resource types from this policy"
-        },
         "type": "Array",
+        "metadata": {
+          "description": "Exclude certain resource types from this policy",
+          "displayName": "Excluded Resource Types"
+        },
         "defaultValue": [
           "Microsoft.Network/firewallPolicies",
           "Microsoft.Media/mediaservices/liveevents",

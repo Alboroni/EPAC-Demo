@@ -7,9 +7,9 @@
     "mode": "All",
     "metadata": {
       "gitHubPolicy": {
+        "digest": "89505946465d3404bd0d55936abd4c2d40243733",
         "repoName": "Alboroni/CustomPolicy",
         "filepath": "policies/Deny_storage_accounts_not_using_only_HTTPS_760893b4-49e4-49ec-9990-7d59075bb73f",
-        "digest": "89505946465d3404bd0d55936abd4c2d40243733",
         "runUrl": "https://github.com/Alboroni/CustomPolicy/actions/runs/4086142098",
         "commitSha": "afac1f203de86c638bd995720d10577ad95baa1b"
       }

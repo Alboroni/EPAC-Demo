@@ -12,9 +12,10 @@
     },
     "parameters": {
       "effect": {
+        "type": "string",
         "metadata": {
-          "displayName": "Effect",
-          "description": "Enable or disable the execution of the policy"
+          "description": "Enable or disable the execution of the policy",
+          "displayName": "Effect"
         },
         "allowedValues": [
           "Audit",
@@ -22,29 +23,28 @@
           "Modify",
           "Disabled"
         ],
-        "type": "string",
         "defaultValue": "Modify"
       },
       "tagValue": {
+        "type": "String",
         "metadata": {
-          "displayName": "Tag Value",
-          "description": "Value of the tag, such as 'production'"
-        },
-        "type": "String"
+          "description": "Value of the tag, such as 'production'",
+          "displayName": "Tag Value"
+        }
       },
       "tagName": {
+        "type": "String",
         "metadata": {
-          "displayName": "Tag Name",
-          "description": "Name of the tag, such as 'environment'"
-        },
-        "type": "String"
+          "description": "Name of the tag, such as 'environment'",
+          "displayName": "Tag Name"
+        }
       },
       "excludedRG": {
-        "metadata": {
-          "displayName": "Excluded Resource Groups",
-          "description": "This array contains all dynamically excluded RGs from this policy"
-        },
         "type": "Array",
+        "metadata": {
+          "description": "This array contains all dynamically excluded RGs from this policy",
+          "displayName": "Excluded Resource Groups"
+        },
         "defaultValue": [
           "synapseworkspace-managedrg-*",
           "databricks*",

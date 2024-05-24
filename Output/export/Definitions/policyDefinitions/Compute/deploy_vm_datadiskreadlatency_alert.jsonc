@@ -61,6 +61,14 @@
           "*"
         ]
       },
+      "alertResourceGroupLocation": {
+        "metadata": {
+          "displayName": "Resource Group Location",
+          "description": "Location of the Resource group the alert is placed in"
+        },
+        "type": "String",
+        "defaultValue": "centralus"
+      },
       "alertResourceGroupTags": {
         "metadata": {
           "displayName": "Resource Group Tags",
@@ -195,14 +203,6 @@
         ],
         "type": "String",
         "defaultValue": "Average"
-      },
-      "alertResourceGroupLocation": {
-        "metadata": {
-          "displayName": "Resource Group Location",
-          "description": "Location of the Resource group the alert is placed in"
-        },
-        "type": "String",
-        "defaultValue": "centralus"
       },
       "enabled": {
         "metadata": {

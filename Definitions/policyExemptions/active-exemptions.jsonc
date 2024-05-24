@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-exemption-schema.json",
+  "exemptions": [
+    {
+      "name": "f8048a263f7d46579caccab1",
+      "displayName": "EPAC-Dev - Storage account keys should not be expired",
+      "description": null,
+      "exemptionCategory": "Waiver",
+      "expiresOn": null,
+      "scope": "/providers/Microsoft.Management/managementGroups/EPAC-Dev",
+      "policyAssignmentId": "/providers/Microsoft.Management/managementGroups/EPAC-Dev/providers/Microsoft.Authorization/policyAssignments/e00dfeec8b6b469ca51f9dc4",
+      "policyDefinitionReferenceIds": null,
+      "resourceSelectors": [],
+      "metadata": {},
+      "assignmentScopeValidation": null
+    }
+  ]
+}
