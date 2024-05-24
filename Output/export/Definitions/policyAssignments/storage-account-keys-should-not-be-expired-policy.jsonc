@@ -11,8 +11,8 @@
     "description": ""
   },
   "metadata": {
-    "parameterScopes": {},
-    "assignedBy": "Alex Young"
+    "assignedBy": "Alex Young",
+    "parameterScopes": {}
   },
   "scope": {
     "epac-dev": [

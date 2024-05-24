@@ -12,8 +12,8 @@
   },
   "metadata": {
     "parameterScopes": {
-      "eventHubRuleId": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourcegroups/eventhub-rg/providers/microsoft.eventhub/namespaces/alexyoeventhub",
-      "azureRegions": "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+      "azureRegions": "/providers/Microsoft.Management/managementGroups/AlexYoTop",
+      "eventHubRuleId": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourcegroups/eventhub-rg/providers/microsoft.eventhub/namespaces/alexyoeventhub"
     },
     "assignedBy": "System Administrator"
   },

@@ -12,7 +12,6 @@
     },
     "parameters": {
       "effect": {
-        "type": "string",
         "metadata": {
           "description": "Enable or disable the execution of the policy",
           "displayName": "Effect"
@@ -22,21 +21,22 @@
           "Deny",
           "Disabled"
         ],
+        "type": "string",
         "defaultValue": "Audit"
       },
       "tagName": {
-        "type": "String",
         "metadata": {
           "description": "Name of the tag, such as 'environment'",
           "displayName": "Tag Name"
-        }
+        },
+        "type": "String"
       },
       "excludedRG": {
-        "type": "Array",
         "metadata": {
           "description": "This array contains all excluded RGs from this policy",
           "displayName": "Excluded Resource Groups"
         },
+        "type": "Array",
         "defaultValue": [
           "synapseworkspace-managedrg-*",
           "databricks*",
