@@ -1,7 +1,7 @@
 variables:
   # This pipeline is used to deploy Policies, Initiative definitions and Assignments into Azure.
   PAC_OUTPUT_FOLDER: ./Output
-  PAC_DEFINITIONS_FOLDER: ./Test/Pipelines/Definitions
+  PAC_DEFINITIONS_FOLDER: ./Definitions
 
   # Use the plain text name of each service connection as a reference
   devServiceConnection: "Epac-Dev"
