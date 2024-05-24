@@ -4,7 +4,7 @@ variables:
   PAC_DEFINITIONS_FOLDER: ./Test/Pipelines/Definitions
 
   # Use the plain text name of each service connection as a reference
-  devServiceConnection: "sc-epac-dev"
+  devServiceConnection: "Epac-Dev"
 
 # what to build trigger
 trigger:
