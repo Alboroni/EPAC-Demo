@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "7ce92201-8036-4d55-938e-0dce0a5bc475",
+  "properties": {
+    "displayName": "Require Tag on Resource Group with dynamic notScope",
+    "description": "This policy requires a tag on resource groups when any resource group (not listed in in excludedRg) is created or updated.",
+    "mode": "All",
+    "metadata": {
+      "deployedBy": "epac/00000000-0000-0000-0000-000000000999/epac-dev",
+      "version": "1.0.1",
+      "category": "Tags"
+    },
+    "parameters": {
+      "effect": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "type": "string",
+        "defaultValue": "Audit"
+      },
+      "tagName": {
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the tag, such as 'environment'"
+        },
+        "type": "String"
+      },
+      "excludedRG": {
+        "metadata": {
+          "displayName": "Excluded Resource Groups",
+          "description": "This array contains all excluded RGs from this policy"
+        },
+        "type": "Array",
+        "defaultValue": [
+          "synapseworkspace-managedrg-*",
+          "databricks*",
+          "LogAnalyticsDefaultR*",
+          "managed-rg-*",
+          "DefaultResourceGroup*",
+          "NetworkWatcherRG*"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": "true"
+          },
+          {
+            "equals": 0,
+            "count": {
+              "where": {
+                "field": "name",
+                "like": "[current('excludedRG')]"
+              },
+              "value": "[parameters('excludedRG')]",
+              "name": "ExcludedRG"
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_FrontdoorCDN_OriginLatency_Alert",
+    "displayName": "Deploy Frontdoor CDN Profile Origin Latency Alert"
+  },
+  "assignment": {
+    "name": "a45a92eccb8e43d2a0767e5c",
+    "displayName": "Deploy Frontdoor CDN Profile Origin Latency Alert",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  }
+}

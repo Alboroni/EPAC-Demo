@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_AG_CPUUtilization_Alert",
+    "displayName": "Deploy AGW CPU Utilization Alert"
+  },
+  "assignment": {
+    "name": "1ed9208302614e6ba719dfe1",
+    "displayName": "[DINE] Deploy AG CPU Utilization Alert",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "de184037-80d9-4264-9e99-e083354f48cc",
+    "displayName": "Azure Backup should be enabled for Azure Files"
+  },
+  "assignment": {
+    "name": "4cd49ae653a44cafbcb60935",
+    "displayName": "Azure Backup should be enabled for Azure Files",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  }
+}

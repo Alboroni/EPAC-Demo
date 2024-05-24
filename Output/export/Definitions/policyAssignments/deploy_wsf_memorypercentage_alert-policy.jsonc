@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_WSF_MemoryPercentage_Alert",
+    "displayName": "Deploy App Service Plan Memory Percentage Alert"
+  },
+  "assignment": {
+    "name": "66b568cd32ed4e61b31807c4",
+    "displayName": "Deploy App Service Plan Memory Percentage Alert",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  }
+}

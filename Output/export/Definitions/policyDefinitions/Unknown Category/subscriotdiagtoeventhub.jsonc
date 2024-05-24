@@ -1,0 +1,153 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "225360b5-d383-4cef-b981-c657f4f30841",
+  "properties": {
+    "displayName": "SubscriotDiagtoEventHub",
+    "mode": "All",
+    "metadata": {},
+    "version": "1.0.0",
+    "parameters": {
+      "eventHubRuleId": {
+        "metadata": {
+          "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+          "displayName": "EventHubRuleID",
+          "assignPermissions": true,
+          "description": "The event hub RuleID for Azure Diagnostics"
+        },
+        "type": "String"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "deploymentScope": "subscription",
+          "existenceScope": "subscription",
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                "variables": {},
+                "parameters": {
+                  "eventHubRuleId": {
+                    "type": "string"
+                  }
+                },
+                "resources": [
+                  {
+                    "properties": {
+                      "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
+                      "logs": [
+                        {
+                          "enabled": true,
+                          "category": "Administrative"
+                        },
+                        {
+                          "enabled": true,
+                          "category": "Security"
+                        },
+                        {
+                          "enabled": false,
+                          "category": "ServiceHealth"
+                        },
+                        {
+                          "enabled": false,
+                          "category": "Alert"
+                        },
+                        {
+                          "enabled": false,
+                          "category": "Recommendation"
+                        },
+                        {
+                          "enabled": false,
+                          "category": "Policy"
+                        },
+                        {
+                          "enabled": false,
+                          "category": "Autoscale"
+                        },
+                        {
+                          "enabled": false,
+                          "category": "ResourceHealth"
+                        }
+                      ]
+                    },
+                    "apiVersion": "2017-05-01-preview",
+                    "location": "Global",
+                    "type": "Microsoft.Insights/diagnosticSettings",
+                    "name": "subscriptionLogsToEventHub"
+                  }
+                ],
+                "outputs": {},
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "eventHubRuleId": {
+                  "value": "[parameters('eventHubRuleId')]"
+                }
+              }
+            },
+            "location": "westeurope"
+          },
+          "type": "Microsoft.Insights/diagnosticSettings",
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "existenceCondition": {
+            "allOf": [
+              {
+                "count": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                  "where": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                        "equals": "true"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs[*].category",
+                        "equals": "Security"
+                      }
+                    ]
+                  }
+                },
+                "greater": 0
+              },
+              {
+                "count": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                  "where": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                        "equals": "true"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs[*].category",
+                        "equals": "Administrative"
+                      }
+                    ]
+                  }
+                },
+                "greater": 0
+              },
+              {
+                "field": "Microsoft.Insights/diagnosticSettings/EventHubAuthorizationRuleId",
+                "equals": "[parameters('EventHubRuleID')]"
+              }
+            ]
+          }
+        },
+        "effect": "deployIfNotExists"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_ALB_DataPathAvailability_Alert",
+    "displayName": "Deploy ALB Data Path Availability Alert"
+  },
+  "assignment": {
+    "name": "ca661c0fd79a4407bb5bdc63",
+    "displayName": "[DINE] Deploy ALB Data Path Availability Alert",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  }
+}

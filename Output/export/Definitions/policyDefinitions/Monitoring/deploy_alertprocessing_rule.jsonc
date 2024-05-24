@@ -1,0 +1,581 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "Deploy_AlertProcessing_Rule",
+  "properties": {
+    "displayName": "Deploy Alert Processing Rule",
+    "description": "Policy to Deploy Deploy Alert Processing Rule with Action Group",
+    "mode": "All",
+    "metadata": {
+      "ALZCloudEnvironments": [
+        "AzureCloud"
+      ],
+      "_deployed_by_amba": "True",
+      "source": "https://github.com/Azure/azure-monitor-baseline-alerts/",
+      "category": "Monitoring",
+      "version": "1.0.1"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "AMBAAGServiceUri": {
+        "metadata": {
+          "displayName": "Service Uri Webhook ",
+          "description": "Indicates the webhook service uri in a webhook"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAMonitorResourceGroupName": {
+        "metadata": {
+          "displayName": "Resource Group Name",
+          "description": "Resource group the alert is placed in"
+        },
+        "type": "String",
+        "defaultValue": "AMBAMonitoring-rg"
+      },
+      "AMBAAGIdentifierUri": {
+        "metadata": {
+          "displayName": "Identifier Uri Webhook ",
+          "description": "Indicates the webhook identifier uri in a webhook"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAMonitorActionGroupFunctionHttpTriggerUrl": {
+        "metadata": {
+          "displayName": "Function Http Trigger Url",
+          "description": "Function Http Trigger Url for Action Group to send alerts to"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAMonitorActionGroupEmail": {
+        "metadata": {
+          "displayName": "Action Group Email",
+          "description": "Email address to send alerts to"
+        },
+        "type": "String",
+        "defaultValue": "action@mail.com"
+      },
+      "AMBAMonitorActionGroupFunctionName": {
+        "metadata": {
+          "displayName": "Function Name",
+          "description": "Function Name for Action Group to send alerts to"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAMonitorResourceGroupLocation": {
+        "metadata": {
+          "displayName": "Resource Group Location",
+          "description": "Location of the Resource group the alert is placed in"
+        },
+        "type": "String",
+        "defaultValue": "centralus"
+      },
+      "AMBAAGLogicappResourceId": {
+        "metadata": {
+          "displayName": "Logic App Resource Id",
+          "description": "Logic App Resource Id for Action Group to send alerts to"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAAGWHTenantId": {
+        "metadata": {
+          "displayName": "Tenant Id Secure Webhook ",
+          "description": "Indicates the tenant id in a secure webhook"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "MonitorDisable": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Tag name to disable monitoring at subscription. Set to true if monitoring process rule should be disabled"
+        },
+        "type": "String",
+        "defaultValue": "MonitorDisable"
+      },
+      "AMBAAGEHTenantId": {
+        "metadata": {
+          "displayName": "Event Hub Tenant Id",
+          "description": "Event Hub Tenant Id"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAAGuseAadAuth": {
+        "metadata": {
+          "displayName": "Use Entra Auth",
+          "description": "Indicates if the webhook should be secure and use Entra Authorisation set to true or false"
+        },
+        "type": "String",
+        "defaultValue": "false"
+      },
+      "AMBAEventHubResourceId": {
+        "metadata": {
+          "displayName": "Event Hub Resource Id",
+          "description": "Event Hub Resource Id for action group to send alerts to "
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAAGArmRoleId": {
+        "metadata": {
+          "displayName": "Arm Role Id",
+          "description": "Arm Built-in Role Id for action group to send alerts to a subscription level, will only send to individual members of role"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAMonitorResourceGroupTags": {
+        "metadata": {
+          "displayName": "Resource Group Tags",
+          "description": "Tags on the Resource group the alert is placed in"
+        },
+        "type": "Object",
+        "defaultValue": {
+          "_deployed_by_alz": true
+        }
+      },
+      "AMBAAGLogicAppcallbackUrl": {
+        "metadata": {
+          "displayName": "Logic App Callback Url",
+          "description": "Logic App Callback Url for Action Group"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAMonitorActionGroupFunctionAppResourceId": {
+        "metadata": {
+          "displayName": "Function App Resource Id",
+          "description": "Function App Resource Id for Action Group to send alerts to"
+        },
+        "type": "String",
+        "defaultValue": ""
+      },
+      "AMBAAGAADObjectId": {
+        "metadata": {
+          "displayName": "Entra Object Id Secure Webhook ",
+          "description": "Indicates the Entra object id for Entra auth in a secure webhook"
+        },
+        "type": "String",
+        "defaultValue": ""
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions"
+          },
+          {
+            "field": "[concat('tags[', parameters('MonitorDisable'), ']')]",
+            "notEquals": "true"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "deploymentScope": "subscription",
+          "resourceGroupName": "[parameters('AMBAMonitorResourceGroupName')]",
+          "existenceScope": "resourcegroup",
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "resources": [
+                  {
+                    "tags": "[parameters('AMBAMonitorResourceGroupTags')]",
+                    "apiVersion": "2021-04-01",
+                    "location": "[parameters('AMBAMonitorResourceGroupLocation')]",
+                    "type": "Microsoft.Resources/resourceGroups",
+                    "name": "[parameters('AMBAMonitorResourceGroupName')]"
+                  },
+                  {
+                    "resourceGroup": "[parameters('AMBAMonitorResourceGroupName')]",
+                    "properties": {
+                      "mode": "Incremental",
+                      "template": {
+                        "resources": [
+                          {
+                            "location": "Global",
+                            "apiVersion": "2022-06-01",
+                            "properties": {
+                              "logicAppReceivers": "[if(empty(parameters('AMBAAGLogicappResourceId')),null(),variables('varActionGroupReceivers').varlogicAppReceivers)]",
+                              "eventHubReceivers": "[if(empty(parameters('AMBAEventHubResourceId')),null(),variables('varActionGroupReceivers').varEventHubReceiver)]",
+                              "enabled": true,
+                              "webhookReceivers": "[if(empty(parameters('AMBAAGServiceUri')),null(),variables('varActionGroupReceivers').varWebhookReceiver)]",
+                              "copy": [
+                                {
+                                  "mode": "serial",
+                                  "count": "[length(variables('varAMBAMonitorActionGroupEmail'))]",
+                                  "input": {
+                                    "useCommonSchema": true,
+                                    "emailAddress": "[trim(variables('varAMBAMonitorActionGroupEmail')[copyIndex('emailReceivers')])]",
+                                    "name": "[concat('AMBAMail-', indexOf(variables('varAMBAMonitorActionGroupEmail'), variables('varAMBAMonitorActionGroupEmail')[copyIndex('emailReceivers')]))]"
+                                  },
+                                  "name": "emailReceivers"
+                                },
+                                {
+                                  "mode": "serial",
+                                  "count": "[length(variables('varAMBAMonitorActionGroupArmRoleId'))]",
+                                  "input": {
+                                    "useCommonSchema": true,
+                                    "roleId": "[trim(variables('varAMBAMonitorActionGroupArmRoleId')[copyIndex('armRoleReceivers')])]",
+                                    "name": "[concat('AMBAARM-', indexOf(variables('varAMBAMonitorActionGroupArmRoleId'), variables('varAMBAMonitorActionGroupArmRoleId')[copyIndex('armRoleReceivers')]))]"
+                                  },
+                                  "name": "armRoleReceivers"
+                                }
+                              ],
+                              "groupShortName": "AMBAActnGrp",
+                              "azureFunctionReceivers": "[if(empty(parameters('AMBAMonitorActionGroupFunctionAppResourceId')),null(),variables('varActionGroupReceivers').varFunctionReceivers)]"
+                            },
+                            "tags": {
+                              "_deployed_by_amba": true
+                            },
+                            "type": "Microsoft.Insights/actionGroups",
+                            "condition": "[not(empty(parameters('AMBAAGArmRoleId')))]",
+                            "name": "AmbaActionGrp"
+                          },
+                          {
+                            "location": "Global",
+                            "apiVersion": "2022-06-01",
+                            "properties": {
+                              "logicAppReceivers": "[if(empty(parameters('AMBAAGLogicappResourceId')),null(),variables('varActionGroupReceivers').varlogicAppReceivers)]",
+                              "eventHubReceivers": "[if(empty(parameters('AMBAEventHubResourceId')),null(),variables('varActionGroupReceivers').varEventHubReceiver)]",
+                              "enabled": true,
+                              "webhookReceivers": "[if(empty(parameters('AMBAAGServiceUri')),null(),variables('varActionGroupReceivers').varWebhookReceiver)]",
+                              "copy": [
+                                {
+                                  "mode": "serial",
+                                  "count": "[length(variables('varAMBAMonitorActionGroupEmail'))]",
+                                  "input": {
+                                    "useCommonSchema": true,
+                                    "emailAddress": "[trim(variables('varAMBAMonitorActionGroupEmail')[copyIndex('emailReceivers')])]",
+                                    "name": "[concat('AMBAMail-', indexOf(variables('varAMBAMonitorActionGroupEmail'), variables('varAMBAMonitorActionGroupEmail')[copyIndex('emailReceivers')]))]"
+                                  },
+                                  "name": "emailReceivers"
+                                }
+                              ],
+                              "groupShortName": "AMBAActnGrp",
+                              "azureFunctionReceivers": "[if(empty(parameters('AMBAMonitorActionGroupFunctionAppResourceId')),null(),variables('varActionGroupReceivers').varFunctionReceivers)]"
+                            },
+                            "tags": {
+                              "_deployed_by_amba": true
+                            },
+                            "type": "Microsoft.Insights/actionGroups",
+                            "condition": "[empty(parameters('AMBAAGArmRoleId'))]",
+                            "name": "AmbaActionGrp"
+                          },
+                          {
+                            "location": "Global",
+                            "apiVersion": "2021-08-08",
+                            "properties": {
+                              "scopes": [
+                                "[subscription().Id]"
+                              ],
+                              "enabled": true,
+                              "description": "AMBA Alert Processing Rule for Subscription",
+                              "actions": [
+                                {
+                                  "actiongroupIds": [
+                                    "[[concat(subscription().Id, '/resourceGroups/', parameters('AMBAMonitorResourceGroupName'), '/providers/Microsoft.Insights/actionGroups/AMBAActionGrp')]"
+                                  ],
+                                  "actionType": "AddActionGroups"
+                                }
+                              ]
+                            },
+                            "tags": {
+                              "_deployed_by_amba": true
+                            },
+                            "type": "Microsoft.AlertsManagement/actionRules",
+                            "dependsOn": [
+                              "[concat('Microsoft.Insights/actionGroups/', 'AMBAActionGrp')]"
+                            ],
+                            "name": "AMBA Alert Processing Rule"
+                          }
+                        ],
+                        "contentVersion": "1.0.0.0",
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "variables": {},
+                        "parameters": {
+                          "AMBAMonitorActionGroupEmail": {
+                            "type": "string"
+                          },
+                          "AMBAMonitorActionGroupFunctionHttpTriggerUrl": {
+                            "type": "string"
+                          },
+                          "AMBAMonitorActionGroupFunctionAppResourceId": {
+                            "type": "string"
+                          },
+                          "AMBAAGLogicAppcallbackUrl": {
+                            "type": "string"
+                          },
+                          "AMBAAGArmRoleId": {
+                            "type": "string"
+                          },
+                          "AMBAAGuseAadAuth": {
+                            "type": "string"
+                          },
+                          "AMBAAGLogicappResourceId": {
+                            "type": "string"
+                          },
+                          "AMBAAGWHTenantId": {
+                            "type": "string"
+                          },
+                          "AMBAEventHubResourceId": {
+                            "type": "string"
+                          },
+                          "AMBAAGEHTenantId": {
+                            "type": "string"
+                          },
+                          "AMBAAGIdentifierUri": {
+                            "type": "string"
+                          },
+                          "AMBAAGAADObjectId": {
+                            "type": "string"
+                          },
+                          "AMBAMonitorResourceGroupName": {
+                            "type": "string"
+                          },
+                          "AMBAAGServiceUri": {
+                            "type": "string"
+                          },
+                          "AMBAMonitorActionGroupFunctionName": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "parameters": {
+                        "AMBAMonitorActionGroupEmail": {
+                          "value": "[parameters('AMBAMonitorActionGroupEmail')]"
+                        },
+                        "AMBAMonitorActionGroupFunctionHttpTriggerUrl": {
+                          "value": "[parameters('AMBAMonitorActionGroupFunctionHttpTriggerUrl')]"
+                        },
+                        "AMBAMonitorActionGroupFunctionAppResourceId": {
+                          "value": "[parameters('AMBAMonitorActionGroupFunctionAppResourceId')]"
+                        },
+                        "AMBAAGLogicAppcallbackUrl": {
+                          "value": "[parameters('AMBAAGLogicAppcallbackUrl')]"
+                        },
+                        "AMBAAGArmRoleId": {
+                          "value": "[parameters('AMBAAGArmRoleId')]"
+                        },
+                        "AMBAAGuseAadAuth": {
+                          "value": "[parameters('AMBAAGuseAadAuth')]"
+                        },
+                        "AMBAAGLogicappResourceId": {
+                          "value": "[parameters('AMBAAGLogicappResourceId')]"
+                        },
+                        "AMBAAGWHTenantId": {
+                          "value": "[parameters('AMBAAGWHTenantId')]"
+                        },
+                        "AMBAEventHubResourceId": {
+                          "value": "[parameters('AMBAEventHubResourceId')]"
+                        },
+                        "AMBAAGEHTenantId": {
+                          "value": "[parameters('AMBAAGEHTenantId')]"
+                        },
+                        "AMBAAGIdentifierUri": {
+                          "value": "[parameters('AMBAAGIdentifierUri')]"
+                        },
+                        "AMBAAGAADObjectId": {
+                          "value": "[parameters('AMBAAGAADObjectId')]"
+                        },
+                        "AMBAMonitorResourceGroupName": {
+                          "value": "[parameters('AMBAMonitorResourceGroupName')]"
+                        },
+                        "AMBAAGServiceUri": {
+                          "value": "[parameters('AMBAAGServiceUri')]"
+                        },
+                        "AMBAMonitorActionGroupFunctionName": {
+                          "value": "[parameters('AMBAMonitorActionGroupFunctionName')]"
+                        }
+                      }
+                    },
+                    "apiVersion": "2019-10-01",
+                    "type": "Microsoft.Resources/deployments",
+                    "dependsOn": [
+                      "[concat('Microsoft.Resources/resourceGroups/', parameters('AMBAMonitorResourceGroupName'))]"
+                    ],
+                    "name": "ActionGroupDeployment"
+                  }
+                ],
+                "contentVersion": "1.0.0.0",
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "variables": {
+                  "varActionGroupReceivers": {
+                    "varWebhookReceiver": [
+                      {
+                        "useCommonAlertSchema": true,
+                        "serviceUri": "[parameters('AMBAAGServiceUri')]",
+                        "identifierUri": "[parameters('AMBAAGIdentifierUri')]",
+                        "objectId": "[parameters('AMBAAGAADObjectId')]",
+                        "tenantId": "[parameters('AMBAAGWHTenantId')]",
+                        "useAadAuth": "[parameters('AMBAAGuseAadAuth')]",
+                        "name": "AMBAActionWebHook"
+                      }
+                    ],
+                    "varEventHubReceiver": [
+                      {
+                        "useCommonAlertSchema": true,
+                        "subscriptionId": "[variables('varAMBAEventHubResourceId')[2]]",
+                        "tenantId": "[parameters('AMBAAGEHTenantId')]",
+                        "eventHubName": "[variables('varAMBAEventHubResourceId')[10]]",
+                        "eventHubNameSpace": "[variables('varAMBAEventHubResourceId')[8]]",
+                        "name": "AMBAActionEventHub"
+                      }
+                    ],
+                    "varFunctionReceivers": [
+                      {
+                        "functionName": "[parameters('AMBAMonitorActionGroupFunctionName')]",
+                        "functionAppResourceId": "[parameters('AMBAMonitorActionGroupFunctionAppResourceId')]",
+                        "httpTriggerUrl": "[parameters('AMBAMonitorActionGroupFunctionHttpTriggerUrl')]",
+                        "useCommonAlertSchema": true,
+                        "name": "AMBAActionFunction"
+                      }
+                    ],
+                    "varlogicAppReceivers": [
+                      {
+                        "useCommonAlertSchema": true,
+                        "callbackUrl": "[parameters('AMBAAGLogicAppcallbackUrl')]",
+                        "resourceId": "[parameters('AMBAAGLogicappResourceId')]",
+                        "name": "AMBAActionLogicApp"
+                      }
+                    ]
+                  },
+                  "varAMBAEventHubResourceId": "[array(split(parameters('AMBAEventHubResourceId'),'/'))]",
+                  "varAMBAMonitorActionGroupEmail": "[array(split(parameters('AMBAMonitorActionGroupEmail'),','))]",
+                  "varAMBAMonitorActionGroupArmRoleId": "[array(split(parameters('AMBAAGArmRoleId'),','))]"
+                },
+                "parameters": {
+                  "AMBAMonitorResourceGroupTags": {
+                    "type": "object"
+                  },
+                  "AMBAAGLogicAppcallbackUrl": {
+                    "type": "string"
+                  },
+                  "AMBAAGArmRoleId": {
+                    "type": "string"
+                  },
+                  "AMBAAGIdentifierUri": {
+                    "type": "string"
+                  },
+                  "AMBAAGLogicappResourceId": {
+                    "type": "string"
+                  },
+                  "AMBAAGuseAadAuth": {
+                    "type": "string"
+                  },
+                  "AMBAEventHubResourceId": {
+                    "type": "string"
+                  },
+                  "AMBAMonitorActionGroupFunctionAppResourceId": {
+                    "type": "string"
+                  },
+                  "AMBAMonitorActionGroupFunctionHttpTriggerUrl": {
+                    "type": "string"
+                  },
+                  "AMBAMonitorActionGroupFunctionName": {
+                    "type": "string"
+                  },
+                  "AMBAAGAADObjectId": {
+                    "type": "string"
+                  },
+                  "AMBAMonitorResourceGroupLocation": {
+                    "type": "string"
+                  },
+                  "AMBAAGEHTenantId": {
+                    "type": "string"
+                  },
+                  "AMBAMonitorResourceGroupName": {
+                    "type": "string"
+                  },
+                  "AMBAAGWHTenantId": {
+                    "type": "string"
+                  },
+                  "AMBAMonitorActionGroupEmail": {
+                    "type": "string"
+                  },
+                  "AMBAAGServiceUri": {
+                    "type": "string"
+                  }
+                }
+              },
+              "parameters": {
+                "AMBAMonitorResourceGroupTags": {
+                  "value": "[parameters('AMBAMonitorResourceGroupTags')]"
+                },
+                "AMBAAGLogicAppcallbackUrl": {
+                  "value": "[parameters('AMBAAGLogicAppcallbackUrl')]"
+                },
+                "AMBAAGArmRoleId": {
+                  "value": "[parameters('AMBAAGArmRoleId')]"
+                },
+                "AMBAAGIdentifierUri": {
+                  "value": "[parameters('AMBAAGIdentifierUri')]"
+                },
+                "AMBAAGLogicappResourceId": {
+                  "value": "[parameters('AMBAAGLogicappResourceId')]"
+                },
+                "AMBAAGuseAadAuth": {
+                  "value": "[parameters('AMBAAGuseAadAuth')]"
+                },
+                "AMBAEventHubResourceId": {
+                  "value": "[parameters('AMBAEventHubResourceId')]"
+                },
+                "AMBAMonitorActionGroupFunctionAppResourceId": {
+                  "value": "[parameters('AMBAMonitorActionGroupFunctionAppResourceId')]"
+                },
+                "AMBAMonitorActionGroupFunctionHttpTriggerUrl": {
+                  "value": "[parameters('AMBAMonitorActionGroupFunctionHttpTriggerUrl')]"
+                },
+                "AMBAMonitorActionGroupFunctionName": {
+                  "value": "[parameters('AMBAMonitorActionGroupFunctionName')]"
+                },
+                "AMBAAGAADObjectId": {
+                  "value": "[parameters('AMBAAGAADObjectId')]"
+                },
+                "AMBAMonitorResourceGroupLocation": {
+                  "value": "[parameters('AMBAMonitorResourceGroupLocation')]"
+                },
+                "AMBAAGEHTenantId": {
+                  "value": "[parameters('AMBAAGEHTenantId')]"
+                },
+                "AMBAMonitorResourceGroupName": {
+                  "value": "[parameters('AMBAMonitorResourceGroupName')]"
+                },
+                "AMBAAGWHTenantId": {
+                  "value": "[parameters('AMBAAGWHTenantId')]"
+                },
+                "AMBAMonitorActionGroupEmail": {
+                  "value": "[parameters('AMBAMonitorActionGroupEmail')]"
+                },
+                "AMBAAGServiceUri": {
+                  "value": "[parameters('AMBAAGServiceUri')]"
+                }
+              }
+            },
+            "location": "uksouth"
+          },
+          "type": "Microsoft.AlertsManagement/actionRules",
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.AlertsManagement/actionRules/description",
+                "equals": "AMBA Alert Processing Rule for Subscription"
+              }
+            ]
+          }
+        },
+        "effect": "deployIfNotExists"
+      }
+    }
+  }
+}

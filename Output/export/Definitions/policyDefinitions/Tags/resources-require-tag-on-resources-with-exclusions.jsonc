@@ -1,0 +1,130 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "c0e2f9e2-c21d-4197-a54d-4a0c38738704",
+  "properties": {
+    "displayName": "Resources Require Tag on resources with Exclusions",
+    "description": "Resources require tag if type listed in resourceTypeList. It allows for resource groups and resource types to be excluded from this.",
+    "mode": "Indexed",
+    "metadata": {
+      "deployedBy": "epac/00000000-0000-0000-0000-000000000999/epac-dev",
+      "version": "1.0.0",
+      "category": "Tags"
+    },
+    "parameters": {
+      "effect": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "type": "string",
+        "defaultValue": "Audit"
+      },
+      "tagName": {
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the tag, such as 'environment'"
+        },
+        "type": "String"
+      },
+      "excludedRG": {
+        "metadata": {
+          "displayName": "Excluded Resource Groups",
+          "description": "This array contains all excluded RGs from this policy"
+        },
+        "type": "Array",
+        "defaultValue": [
+          "synapseworkspace-managedrg-*",
+          "managed-rg-*",
+          "databricks-*",
+          "DefaultResourceGroup*",
+          "NetworkWatcherRG",
+          "LogAnalyticsDefault*",
+          "cloud-shell-storage*"
+        ]
+      },
+      "resourceTypeList": {
+        "metadata": {
+          "strongType": "resourceTypes",
+          "displayName": "Resource Types to Deploy Diagnostics",
+          "description": "List of Resource Types included for deployment. An empty list is equivalent to all Resource Types"
+        },
+        "type": "array",
+        "defaultValue": []
+      },
+      "excludedResourceTypes": {
+        "metadata": {
+          "displayName": "Excluded Resource Types",
+          "description": "Exclude certain resource types from this policy, if all resourceTypes are selected by using an empty resourceTypeList"
+        },
+        "type": "Array",
+        "defaultValue": [
+          "Microsoft.Network/firewallPolicies",
+          "Microsoft.Media/mediaservices/liveevents",
+          "Microsoft.Sql/virtualclusters",
+          "Microsoft.Logic/integrationServiceEnvironments/managedApis",
+          "Microsoft.ManagedIdentity/userAssignedIdentities",
+          "microsoft.sql/servers/databases",
+          "microsoft.sql/managedinstances/databases",
+          "microsoft.compute/virtualmachines/extensions",
+          "Microsoft.OperationsManagement/solutions"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "field": "type",
+                "in": "[parameters('resourceTypeList')]"
+              },
+              {
+                "allOf": [
+                  {
+                    "value": "[length(parameters('resourceTypeList'))]",
+                    "equals": 0
+                  },
+                  {
+                    "equals": 0,
+                    "count": {
+                      "where": {
+                        "field": "type",
+                        "like": "[current('excludedResourceTypes')]"
+                      },
+                      "value": "[parameters('excludedResourceTypes')]",
+                      "name": "excludedResourceTypes"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": "true"
+          },
+          {
+            "equals": 0,
+            "count": {
+              "where": {
+                "value": "[resourceGroup().name]",
+                "like": "[current('excludedRG')]"
+              },
+              "value": "[parameters('excludedRG')]",
+              "name": "excludedRG"
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

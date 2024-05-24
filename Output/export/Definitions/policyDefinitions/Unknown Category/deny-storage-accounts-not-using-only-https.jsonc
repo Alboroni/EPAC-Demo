@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "760893b4-49e4-49ec-9990-7d59075bb73f",
+  "properties": {
+    "displayName": "Deny storage accounts not using only HTTPS",
+    "description": "Deny storage accounts not using only HTTPS. Checks the supportsHttpsTrafficOnly property on StorageAccounts",
+    "mode": "All",
+    "metadata": {
+      "gitHubPolicy": {
+        "repoName": "Alboroni/CustomPolicy",
+        "filepath": "policies/Deny_storage_accounts_not_using_only_HTTPS_760893b4-49e4-49ec-9990-7d59075bb73f",
+        "digest": "89505946465d3404bd0d55936abd4c2d40243733",
+        "runUrl": "https://github.com/Alboroni/CustomPolicy/actions/runs/4086142098",
+        "commitSha": "afac1f203de86c638bd995720d10577ad95baa1b"
+      }
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effectType": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "Deny",
+          "Disabled"
+        ],
+        "type": "String",
+        "defaultValue": "Deny"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+            "notEquals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effectType')]"
+      }
+    }
+  }
+}

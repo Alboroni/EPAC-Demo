@@ -1,0 +1,2 @@
+name,displayName,description,exemptionCategory,expiresOn,scope,policyAssignmentId,policyDefinitionReferenceIds,resourceSelectors,metadata,assignmentScopeValidation
+f8048a263f7d46579caccab1,EPAC-Dev - Storage account keys should not be expired,,Waiver,,/providers/Microsoft.Management/managementGroups/EPAC-Dev,/providers/Microsoft.Management/managementGroups/EPAC-Dev/providers/Microsoft.Authorization/policyAssignments/e00dfeec8b6b469ca51f9dc4,,,,

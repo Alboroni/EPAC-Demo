@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_AG_FailedRequests_Alert",
+    "displayName": "Deploy AGW FailedRequests Alert"
+  },
+  "assignment": {
+    "name": "71e8a7210b94427b874fc86d",
+    "displayName": "[DINE] Deploy AG FailedRequests Alert",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  }
+}

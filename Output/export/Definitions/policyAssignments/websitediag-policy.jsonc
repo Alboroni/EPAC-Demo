@@ -1,0 +1,111 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "e49df596-3047-40f3-b0c8-0ac4fd9872e6",
+    "displayName": "WebSiteDiag"
+  },
+  "assignment": {
+    "name": "f0ee59cbbfc64df78812890d",
+    "displayName": "WebSiteDiag",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {
+      "eventHubRuleId": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourcegroups/eventhub-rg/providers/microsoft.eventhub/namespaces/alexyoeventhub",
+      "azureRegions": "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    },
+    "assignedBy": "System Administrator"
+  },
+  "parameters": {
+    "azureRegions": [
+      "asia",
+      "asiapacific",
+      "australia",
+      "australiacentral",
+      "australiacentral2",
+      "australiaeast",
+      "australiasoutheast",
+      "brazil",
+      "brazilsouth",
+      "brazilsoutheast",
+      "canada",
+      "canadacentral",
+      "canadaeast",
+      "centralindia",
+      "centralus",
+      "centralusstage",
+      "eastasia",
+      "eastasiastage",
+      "eastus",
+      "eastusstage",
+      "eastus2",
+      "eastus2stage",
+      "europe",
+      "france",
+      "francecentral",
+      "francesouth",
+      "germany",
+      "germanynorth",
+      "germanywestcentral",
+      "global",
+      "india",
+      "japan",
+      "japaneast",
+      "japanwest",
+      "jioindiacentral",
+      "jioindiawest",
+      "korea",
+      "koreacentral",
+      "koreasouth",
+      "northcentralus",
+      "northcentralusstage",
+      "northeurope",
+      "norway",
+      "norwayeast",
+      "norwaywest",
+      "qatarcentral",
+      "singapore",
+      "southafrica",
+      "southafricanorth",
+      "southafricawest",
+      "southcentralus",
+      "southcentralusstage",
+      "southindia",
+      "southeastasia",
+      "southeastasiastage",
+      "swedencentral",
+      "switzerland",
+      "switzerlandnorth",
+      "switzerlandwest",
+      "uaecentral",
+      "uaenorth",
+      "uksouth",
+      "ukwest",
+      "uae",
+      "uk",
+      "unitedstates",
+      "unitedstateseuap",
+      "westcentralus",
+      "westeurope",
+      "westindia",
+      "westus",
+      "westusstage",
+      "westus2",
+      "westus2stage",
+      "westus3"
+    ],
+    "profileName": "web",
+    "eventHubRuleId": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourcegroups/eventhub-rg/providers/microsoft.eventhub/namespaces/alexyoeventhub/authorizationrules/rootmanagesharedaccesskey"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  }
+}

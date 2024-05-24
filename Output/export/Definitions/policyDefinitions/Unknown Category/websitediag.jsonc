@@ -1,0 +1,283 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "e49df596-3047-40f3-b0c8-0ac4fd9872e6",
+  "properties": {
+    "displayName": "WebSiteDiag",
+    "mode": "All",
+    "metadata": {},
+    "version": "1.0.0",
+    "parameters": {
+      "profileName": {
+        "metadata": {
+          "displayName": "Profile Name for Config",
+          "description": "The profile name Azure Diagnostics"
+        },
+        "type": "String"
+      },
+      "eventHubRuleId": {
+        "metadata": {
+          "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+          "displayName": "EventHubRuleID",
+          "assignPermissions": true,
+          "description": "The event hub RuleID for Azure Diagnostics"
+        },
+        "type": "String"
+      },
+      "logsEnabled": {
+        "metadata": {
+          "displayName": "Enable Logs",
+          "description": "Enable Logs - True or False"
+        },
+        "allowedValues": [
+          "True",
+          "False"
+        ],
+        "type": "String",
+        "defaultValue": "True"
+      },
+      "metricsEnabled": {
+        "metadata": {
+          "displayName": "Enable Metrics",
+          "description": "Enable Metrics - True or False"
+        },
+        "allowedValues": [
+          "True",
+          "False"
+        ],
+        "type": "String",
+        "defaultValue": "False"
+      },
+      "azureRegions": {
+        "metadata": {
+          "strongType": "location",
+          "displayName": "Allowed Locations",
+          "description": "The list of locations that can be specified when deploying resources"
+        },
+        "type": "Array"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Web/sites"
+          },
+          {
+            "value": "[field('kind')]",
+            "notContains": "functionapp"
+          },
+          {
+            "field": "location",
+            "in": "[parameters('azureRegions')]"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                "equals": "[parameters('logsEnabled')]"
+              },
+              {
+                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                "equals": "[parameters('metricsEnabled')]"
+              },
+              {
+                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                "equals": "[parameters('eventHubRuleId')]"
+              }
+            ]
+          },
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "type": "Microsoft.Insights/diagnosticSettings",
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "variables": {},
+                "parameters": {
+                  "location": {
+                    "type": "string"
+                  },
+                  "profileName": {
+                    "type": "string"
+                  },
+                  "eventHubRuleId": {
+                    "type": "string"
+                  },
+                  "metricsEnabled": {
+                    "type": "string"
+                  },
+                  "serverFarmId": {
+                    "type": "string"
+                  },
+                  "logsEnabled": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "resources": [
+                  {
+                    "properties": {
+                      "template": {
+                        "resources": [
+                          {
+                            "location": "[parameters('location')]",
+                            "apiVersion": "2017-05-01-preview",
+                            "properties": {
+                              "logs": [
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceAntivirusScanAuditLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceHTTPLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceConsoleLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceAppLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceFileAuditLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceAuditLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceIPSecAuditLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServicePlatformLogs"
+                                }
+                              ],
+                              "metrics": [
+                                {
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  },
+                                  "enabled": "[parameters('metricsEnabled')]",
+                                  "category": "AllMetrics"
+                                }
+                              ],
+                              "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]"
+                            },
+                            "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+                            "dependsOn": [],
+                            "condition": "[equals(reference(parameters('serverFarmId'), '2021-03-01', 'Full').sku.tier, 'Premium')]",
+                            "name": "[concat(parameters('name'), '/', 'Microsoft.Insights/', parameters('profileName'), '-premium')]"
+                          },
+                          {
+                            "location": "[parameters('location')]",
+                            "apiVersion": "2017-05-01-preview",
+                            "properties": {
+                              "logs": [
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceHTTPLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceConsoleLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceAppLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceAuditLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServiceIPSecAuditLogs"
+                                },
+                                {
+                                  "enabled": "[parameters('logsEnabled')]",
+                                  "category": "AppServicePlatformLogs"
+                                }
+                              ],
+                              "metrics": [
+                                {
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  },
+                                  "enabled": "[parameters('metricsEnabled')]",
+                                  "category": "AllMetrics"
+                                }
+                              ],
+                              "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]"
+                            },
+                            "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+                            "dependsOn": [],
+                            "condition": "[not(equals(reference(parameters('serverFarmId'), '2021-03-01', 'Full').sku.tier, 'Premium'))]",
+                            "name": "[concat(parameters('name'), '/', 'Microsoft.Insights/', parameters('profileName'), '-basic')]"
+                          }
+                        ],
+                        "contentVersion": "1.0.0.0",
+                        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+                      },
+                      "mode": "Incremental"
+                    },
+                    "apiVersion": "2021-04-01",
+                    "type": "Microsoft.Resources/deployments",
+                    "name": "[uniqueString(resourceGroup().id)]"
+                  }
+                ],
+                "outputs": {
+                  "policy": {
+                    "value": "[concat(parameters('eventHubRuleId'), 'configured for diagnostic logs for ', ': ', parameters('name'))]",
+                    "type": "string"
+                  }
+                },
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "location": {
+                  "value": "[field('location')]"
+                },
+                "profileName": {
+                  "value": "[parameters('profileName')]"
+                },
+                "eventHubRuleId": {
+                  "value": "[parameters('eventHubRuleId')]"
+                },
+                "metricsEnabled": {
+                  "value": "[parameters('metricsEnabled')]"
+                },
+                "serverFarmId": {
+                  "value": "[field('Microsoft.Web/sites/serverFarmId')]"
+                },
+                "logsEnabled": {
+                  "value": "[parameters('logsEnabled')]"
+                },
+                "name": {
+                  "value": "[field('name')]"
+                }
+              }
+            }
+          }
+        },
+        "effect": "deployIfNotExists"
+      }
+    }
+  }
+}

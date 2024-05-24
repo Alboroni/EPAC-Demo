@@ -1,0 +1,73 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "Deploy_RecoveryVault_BackupHealthMonitor_Alerting",
+  "properties": {
+    "displayName": "[Append] Deploy RV Backup Health Monitoring Alerts",
+    "description": "Append policy to audit/update Recovery Vault Backup Health Alerting to Azure monitor alerts",
+    "mode": "All",
+    "metadata": {
+      "version": "1.0.0",
+      "Category": "Site Recovery",
+      "source": "https://github.com/Azure/ALZ-Monitor/"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "MonitorDisable": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Tag name to disable monitoring resource. Set to true if monitoring should be disabled"
+        },
+        "type": "String",
+        "defaultValue": "MonitorDisable"
+      },
+      "effect": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Effect of the policy"
+        },
+        "allowedValues": [
+          "append",
+          "modify",
+          "audit",
+          "disabled"
+        ],
+        "type": "String",
+        "defaultValue": "modify"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.RecoveryServices/Vaults"
+          },
+          {
+            "field": "[concat('tags[', parameters('MonitorDisable'), ']')]",
+            "notEquals": "true"
+          },
+          {
+            "field": "Microsoft.RecoveryServices/vaults/monitoringSettings.azureMonitorAlertSettings.alertsForAllJobFailures",
+            "notEquals": "Enabled"
+          }
+        ]
+      },
+      "then": {
+        "details": [
+          {
+            "field": "Microsoft.RecoveryServices/vaults/monitoringSettings",
+            "value": {
+              "azureMonitorAlertSettings": {
+                "alertsForAllJobFailures": "Enabled"
+              },
+              "classicAlertSettings": {
+                "alertsForCriticalOperations": "Disabled"
+              }
+            }
+          }
+        ],
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

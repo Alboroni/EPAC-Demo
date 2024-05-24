@@ -1,0 +1,277 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "Deploy_VPNGw_TunnelIngressPacketDropMismatch_Alert",
+  "properties": {
+    "displayName": "Deploy VPNG Ingress Packet Drop Mismatch Alert",
+    "description": "Policy to audit/deploy VPN Gateway Ingress Packet Drop Mismatch Alert",
+    "mode": "All",
+    "metadata": {
+      "source": "https://github.com/Azure/azure-monitor-baseline-alerts/",
+      "alzCloudEnvironments": [
+        "AzureCloud"
+      ],
+      "_deployed_by_amba": "True",
+      "category": "Network",
+      "version": "1.0.1"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "MonitorDisable": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Tag name to disable monitoring resource. Set to true if monitoring should be disabled"
+        },
+        "type": "String",
+        "defaultValue": "MonitorDisable"
+      },
+      "severity": {
+        "metadata": {
+          "displayName": "Severity",
+          "description": "Severity of the Alert"
+        },
+        "allowedValues": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "type": "String",
+        "defaultValue": "3"
+      },
+      "enabled": {
+        "metadata": {
+          "displayName": "Alert State",
+          "description": "Alert state for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "effect": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Effect of the policy"
+        },
+        "allowedValues": [
+          "deployIfNotExists",
+          "disabled"
+        ],
+        "type": "String",
+        "defaultValue": "deployIfNotExists"
+      },
+      "autoMitigate": {
+        "metadata": {
+          "displayName": "Auto Mitigate",
+          "description": "Auto Mitigate for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "windowSize": {
+        "metadata": {
+          "displayName": "Window Size",
+          "description": "Window size for the alert"
+        },
+        "allowedValues": [
+          "PT1M",
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H",
+          "PT6H",
+          "PT12H",
+          "P1D"
+        ],
+        "type": "String",
+        "defaultValue": "PT5M"
+      },
+      "evaluationFrequency": {
+        "metadata": {
+          "displayName": "Evaluation Frequency",
+          "description": "Evaluation frequency for the alert"
+        },
+        "allowedValues": [
+          "PT1M",
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H"
+        ],
+        "type": "String",
+        "defaultValue": "PT5M"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "microsoft.network/vpngateways"
+          },
+          {
+            "field": "[concat('tags[', parameters('MonitorDisable'), ']')]",
+            "notEquals": "true"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].metricNamespace",
+                "equals": "microsoft.network/vpngateways"
+              },
+              {
+                "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].metricName",
+                "equals": "TunnelIngressPacketDropTSMismatch"
+              },
+              {
+                "field": "Microsoft.Insights/metricalerts/scopes[*]",
+                "equals": "[concat(subscription().id, '/resourceGroups/', resourceGroup().name, '/providers/microsoft.network/vpngateways/', field('fullName'))]"
+              },
+              {
+                "field": "Microsoft.Insights/metricAlerts/enabled",
+                "equals": "[parameters('enabled')]"
+              }
+            ]
+          },
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "type": "Microsoft.Insights/metricAlerts",
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "resources": [
+                  {
+                    "location": "global",
+                    "apiVersion": "2018-03-01",
+                    "properties": {
+                      "criteria": {
+                        "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
+                        "allOf": [
+                          {
+                            "name": "TunnelIngressPacketDropTSMismatch",
+                            "operator": "GreaterThan",
+                            "timeAggregation": "Average",
+                            "metricNamespace": "microsoft.network/vpngateways",
+                            "criterionType": "DynamicThresholdCriterion",
+                            "failingPeriods": {
+                              "minFailingPeriodsToAlert": 4,
+                              "numberOfEvaluationPeriods": 4
+                            },
+                            "metricName": "TunnelIngressPacketDropTSMismatch",
+                            "alertSensitivity": "Medium"
+                          }
+                        ]
+                      },
+                      "windowSize": "[parameters('windowSize')]",
+                      "severity": "[parameters('severity')]",
+                      "parameters": {
+                        "severity": {
+                          "value": "[parameters('severity')]"
+                        },
+                        "enabled": {
+                          "value": "[parameters('enabled')]"
+                        },
+                        "autoMitigate": {
+                          "value": "[parameters('autoMitigate')]"
+                        },
+                        "windowSize": {
+                          "value": "[parameters('windowSize')]"
+                        },
+                        "evaluationFrequency": {
+                          "value": "[parameters('evaluationFrequency')]"
+                        }
+                      },
+                      "evaluationFrequency": "[parameters('evaluationFrequency')]",
+                      "enabled": "[parameters('enabled')]",
+                      "scopes": [
+                        "[parameters('resourceId')]"
+                      ],
+                      "autoMitigate": "[parameters('autoMitigate')]",
+                      "description": "Metric Alert for VPN Gateway tunnel TunnelIngressPacketDropTSMismatch"
+                    },
+                    "tags": {
+                      "_deployed_by_amba": true
+                    },
+                    "type": "Microsoft.Insights/metricAlerts",
+                    "name": "[concat(parameters('resourceName'), '-TunnelIngressPacketDropTSMismatchAlert')]"
+                  }
+                ],
+                "contentVersion": "1.0.0.0",
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "variables": {},
+                "parameters": {
+                  "severity": {
+                    "type": "String"
+                  },
+                  "enabled": {
+                    "type": "String"
+                  },
+                  "resourceId": {
+                    "metadata": {
+                      "displayName": "resourceId",
+                      "description": "Resource ID of the resource emitting the metric that will be used for the comparison"
+                    },
+                    "type": "String"
+                  },
+                  "resourceName": {
+                    "metadata": {
+                      "displayName": "resourceName",
+                      "description": "Name of the resource"
+                    },
+                    "type": "String"
+                  },
+                  "autoMitigate": {
+                    "type": "String"
+                  },
+                  "windowSize": {
+                    "type": "String"
+                  },
+                  "evaluationFrequency": {
+                    "type": "String"
+                  }
+                }
+              },
+              "parameters": {
+                "severity": {
+                  "value": "[parameters('severity')]"
+                },
+                "enabled": {
+                  "value": "[parameters('enabled')]"
+                },
+                "resourceId": {
+                  "value": "[field('id')]"
+                },
+                "resourceName": {
+                  "value": "[field('name')]"
+                },
+                "autoMitigate": {
+                  "value": "[parameters('autoMitigate')]"
+                },
+                "windowSize": {
+                  "value": "[parameters('windowSize')]"
+                },
+                "evaluationFrequency": {
+                  "value": "[parameters('evaluationFrequency')]"
+                }
+              }
+            }
+          }
+        },
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

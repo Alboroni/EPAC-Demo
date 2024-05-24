@@ -1,0 +1,509 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "Deploy_VM_dataDiskSpace_Alert",
+  "properties": {
+    "displayName": "Deploy VM Data Disk Space Alert",
+    "description": "Policy to audit/deploy VM data Disk Space Alert",
+    "mode": "All",
+    "metadata": {
+      "source": "https://github.com/Azure/azure-monitor-baseline-alerts/",
+      "alzCloudEnvironments": [
+        "AzureCloud"
+      ],
+      "_deployed_by_amba": "True",
+      "category": "Compute",
+      "version": "1.0.1"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "operator": {
+        "metadata": {
+          "displayName": "Operator"
+        },
+        "allowedValues": [
+          "Equals",
+          "GreaterThan",
+          "GreaterThanOrEqual",
+          "LessThan",
+          "LessThanOrEqual"
+        ],
+        "type": "String",
+        "defaultValue": "LessThan"
+      },
+      "timeAggregation": {
+        "metadata": {
+          "displayName": "TimeAggregation"
+        },
+        "allowedValues": [
+          "Average",
+          "Count",
+          "Maximum",
+          "Minimum",
+          "Total"
+        ],
+        "type": "String",
+        "defaultValue": "Average"
+      },
+      "alertResourceGroupTags": {
+        "metadata": {
+          "displayName": "Resource Group Tags",
+          "description": "Tags on the Resource group the alert is placed in"
+        },
+        "type": "Object",
+        "defaultValue": {
+          "environment": "test"
+        }
+      },
+      "windowSize": {
+        "metadata": {
+          "displayName": "Window Size",
+          "description": "Window size for the alert"
+        },
+        "allowedValues": [
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H",
+          "PT6H",
+          "PT12H",
+          "PT24H"
+        ],
+        "type": "String",
+        "defaultValue": "PT15M"
+      },
+      "alertResourceGroupLocation": {
+        "metadata": {
+          "displayName": "Resource Group Location",
+          "description": "Location of the Resource group the alert is placed in"
+        },
+        "type": "String",
+        "defaultValue": "centralus"
+      },
+      "effect": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Effect of the policy"
+        },
+        "allowedValues": [
+          "deployIfNotExists",
+          "disabled"
+        ],
+        "type": "String",
+        "defaultValue": "deployIfNotExists"
+      },
+      "disksToInclude": {
+        "metadata": {
+          "displayName": "Disks to be included to be monitored",
+          "description": "Array of disk to be monitored for disk both Windows and Linux"
+        },
+        "type": "array",
+        "defaultValue": [
+          "*"
+        ]
+      },
+      "autoResolveTime": {
+        "metadata": {
+          "displayName": "Auto Resolve",
+          "description": "Auto Resolve time for the alert in ISO 8601 format"
+        },
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "severity": {
+        "metadata": {
+          "displayName": "Severity",
+          "description": "Severity of the Alert"
+        },
+        "allowedValues": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "type": "String",
+        "defaultValue": "2"
+      },
+      "enabled": {
+        "metadata": {
+          "displayName": "Alert State",
+          "description": "Alert state for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "evaluationPeriods": {
+        "metadata": {
+          "displayName": "Evaluation Periods",
+          "description": "The number of aggregated lookback points."
+        },
+        "type": "String",
+        "defaultValue": "1"
+      },
+      "alertResourceGroupName": {
+        "metadata": {
+          "displayName": "Resource Group Name",
+          "description": "Resource group the alert is placed in"
+        },
+        "type": "String",
+        "defaultValue": "AlzMonitoring-rg"
+      },
+      "failingPeriods": {
+        "metadata": {
+          "displayName": "Failing Periods",
+          "description": "Number of failing periods before alert is fired"
+        },
+        "type": "String",
+        "defaultValue": "1"
+      },
+      "evaluationFrequency": {
+        "metadata": {
+          "displayName": "Evaluation Frequency",
+          "description": "Evaluation frequency for the alert"
+        },
+        "allowedValues": [
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H"
+        ],
+        "type": "String",
+        "defaultValue": "PT5M"
+      },
+      "autoResolve": {
+        "metadata": {
+          "displayName": "Auto Resolve",
+          "description": "Auto Resolve for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "threshold": {
+        "metadata": {
+          "displayName": "Threshold",
+          "description": "Threshold for the alert"
+        },
+        "type": "String",
+        "defaultValue": "10"
+      },
+      "autoMitigate": {
+        "metadata": {
+          "displayName": "Auto Mitigate",
+          "description": "Auto Mitigate for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachines"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "deploymentScope": "subscription",
+          "resourceGroupName": "[parameters('alertResourceGroupName')]",
+          "existenceScope": "resourcegroup",
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "resources": [
+                  {
+                    "tags": "[parameters('alertResourceGroupTags')]",
+                    "apiVersion": "2021-04-01",
+                    "location": "[parameters('alertResourceGroupLocation')]",
+                    "type": "Microsoft.Resources/resourceGroups",
+                    "name": "[parameters('alertResourceGroupName')]"
+                  },
+                  {
+                    "resourceGroup": "[parameters('alertResourceGroupName')]",
+                    "properties": {
+                      "mode": "Incremental",
+                      "template": {
+                        "resources": [
+                          {
+                            "location": "[parameters('alertResourceGroupLocation')]",
+                            "apiVersion": "2022-08-01-preview",
+                            "properties": {
+                              "enabled": "[parameters('enabled')]",
+                              "windowSize": "[parameters('windowSize')]",
+                              "severity": "[parameters('severity')]",
+                              "targetResourceTypes": [
+                                "Microsoft.Compute/virtualMachines"
+                              ],
+                              "parameters": {
+                                "windowSize": {
+                                  "value": "[parameters('windowSize')]"
+                                },
+                                "alertResourceGroupLocation": {
+                                  "value": "[parameters('alertResourceGroupName')]"
+                                },
+                                "alertResourceGroupName": {
+                                  "value": "[parameters('alertResourceGroupName')]"
+                                },
+                                "severity": {
+                                  "value": "[parameters('severity')]"
+                                },
+                                "evaluationPeriods": {
+                                  "value": "[parameters('evaluationPeriods')]"
+                                },
+                                "enabled": {
+                                  "value": "[parameters('enabled')]"
+                                },
+                                "autoResolveTime": {
+                                  "value": "[parameters('autoResolveTime')]"
+                                },
+                                "failingPeriods": {
+                                  "value": "[parameters('failingPeriods')]"
+                                },
+                                "autoMitigate": {
+                                  "value": "[parameters('autoMitigate')]"
+                                },
+                                "evaluationFrequency": {
+                                  "value": "[parameters('evaluationFrequency')]"
+                                },
+                                "disksToInclude": {
+                                  "value": "[parameters('disksToInclude')]"
+                                },
+                                "autoResolve": {
+                                  "value": "[parameters('autoResolve')]"
+                                },
+                                "threshold": {
+                                  "value": "[parameters('threshold')]"
+                                }
+                              },
+                              "evaluationFrequency": "[parameters('evaluationFrequency')]",
+                              "displayName": "[concat(subscription().displayName, '-VMLowdataDiskSpaceAlert')]",
+                              "scopes": [
+                                "[subscription().Id]"
+                              ],
+                              "ruleResolveConfiguration": {
+                                "timeToResolve": "[parameters('autoResolveTime')]",
+                                "autoResolved": "[parameters('autoResolve')]"
+                              },
+                              "autoMitigate": "[parameters('autoMitigate')]",
+                              "criteria": {
+                                "allOf": [
+                                  {
+                                    "metricMeasureColumn": "AggregatedValue",
+                                    "operator": "[parameters('operator')]",
+                                    "timeAggregation": "[parameters('timeAggregation')]",
+                                    "query": "InsightsMetrics| where Origin == \"vm.azm.ms\"| where Namespace == \"LogicalDisk\" and Name == \"FreeSpacePercentage\"| extend Disk=tostring(todynamic(Tags)[\"vm.azm.ms/mountId\"])|where Disk !in ('C:','/')| summarize AggregatedValue = avg(Val) by bin(TimeGenerated, 15m), Computer, _ResourceId, Disk",
+                                    "dimensions": [
+                                      {
+                                        "operator": "Include",
+                                        "values": [
+                                          "*"
+                                        ],
+                                        "name": "Computer"
+                                      },
+                                      {
+                                        "operator": "Include",
+                                        "values": "[parameters('disksToInclude')]",
+                                        "name": "Disk"
+                                      }
+                                    ],
+                                    "failingPeriods": {
+                                      "minFailingPeriodsToAlert": "[parameters('failingPeriods')]",
+                                      "numberOfEvaluationPeriods": "[parameters('evaluationPeriods')]"
+                                    },
+                                    "resourceIdColumn": "_ResourceId",
+                                    "threshold": "[parameters('threshold')]"
+                                  }
+                                ]
+                              },
+                              "description": "Log Alert for Virtual Machine dataDiskSpace"
+                            },
+                            "tags": {
+                              "_deployed_by_amba": true
+                            },
+                            "type": "Microsoft.Insights/scheduledQueryRules",
+                            "name": "[concat(subscription().displayName, '-VMLowdataDiskSpaceAlert')]"
+                          }
+                        ],
+                        "contentVersion": "1.0.0.0",
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "variables": {},
+                        "parameters": {
+                          "alertResourceGroupLocation": {
+                            "type": "string"
+                          },
+                          "enabled": {
+                            "type": "string"
+                          },
+                          "alertResourceGroupName": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "parameters": {
+                        "alertResourceGroupLocation": {
+                          "value": "[parameters('alertResourceGroupLocation')]"
+                        },
+                        "enabled": {
+                          "value": "[parameters('enabled')]"
+                        },
+                        "alertResourceGroupName": {
+                          "value": "[parameters('alertResourceGroupName')]"
+                        }
+                      }
+                    },
+                    "apiVersion": "2019-10-01",
+                    "type": "Microsoft.Resources/deployments",
+                    "dependsOn": [
+                      "[concat('Microsoft.Resources/resourceGroups/', parameters('alertResourceGroupName'))]"
+                    ],
+                    "name": "VMdataDiskSpaceAlert"
+                  }
+                ],
+                "contentVersion": "1.0.0.0",
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "variables": {},
+                "parameters": {
+                  "windowSize": {
+                    "type": "String"
+                  },
+                  "operator": {
+                    "type": "String"
+                  },
+                  "timeAggregation": {
+                    "type": "String"
+                  },
+                  "alertResourceGroupLocation": {
+                    "type": "string"
+                  },
+                  "alertResourceGroupName": {
+                    "type": "string"
+                  },
+                  "severity": {
+                    "type": "String"
+                  },
+                  "evaluationPeriods": {
+                    "type": "String"
+                  },
+                  "alertResourceGroupTags": {
+                    "type": "object"
+                  },
+                  "enabled": {
+                    "type": "String"
+                  },
+                  "autoResolveTime": {
+                    "type": "String"
+                  },
+                  "failingPeriods": {
+                    "type": "String"
+                  },
+                  "autoMitigate": {
+                    "type": "String"
+                  },
+                  "evaluationFrequency": {
+                    "type": "String"
+                  },
+                  "disksToInclude": {
+                    "type": "array"
+                  },
+                  "autoResolve": {
+                    "type": "String"
+                  },
+                  "threshold": {
+                    "type": "String"
+                  }
+                }
+              },
+              "parameters": {
+                "windowSize": {
+                  "value": "[parameters('windowSize')]"
+                },
+                "operator": {
+                  "value": "[parameters('operator')]"
+                },
+                "timeAggregation": {
+                  "value": "[parameters('timeAggregation')]"
+                },
+                "alertResourceGroupLocation": {
+                  "value": "[parameters('alertResourceGroupLocation')]"
+                },
+                "alertResourceGroupName": {
+                  "value": "[parameters('alertResourceGroupName')]"
+                },
+                "severity": {
+                  "value": "[parameters('severity')]"
+                },
+                "evaluationPeriods": {
+                  "value": "[parameters('evaluationPeriods')]"
+                },
+                "alertResourceGroupTags": {
+                  "value": "[parameters('alertResourceGroupTags')]"
+                },
+                "enabled": {
+                  "value": "[parameters('enabled')]"
+                },
+                "autoResolveTime": {
+                  "value": "[parameters('autoResolveTime')]"
+                },
+                "failingPeriods": {
+                  "value": "[parameters('failingPeriods')]"
+                },
+                "autoMitigate": {
+                  "value": "[parameters('autoMitigate')]"
+                },
+                "evaluationFrequency": {
+                  "value": "[parameters('evaluationFrequency')]"
+                },
+                "disksToInclude": {
+                  "value": "[parameters('disksToInclude')]"
+                },
+                "autoResolve": {
+                  "value": "[parameters('autoResolve')]"
+                },
+                "threshold": {
+                  "value": "[parameters('threshold')]"
+                }
+              }
+            },
+            "location": "uksouth"
+          },
+          "type": "Microsoft.Insights/scheduledQueryRules",
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/scheduledQueryRules/displayName",
+                "equals": "[concat(subscription().displayName, '-VMLowdataDiskSpaceAlert')]"
+              },
+              {
+                "field": "Microsoft.Insights/scheduledqueryrules/scopes[*]",
+                "equals": "[subscription().id]"
+              },
+              {
+                "field": "Microsoft.Insights/scheduledqueryrules/enabled",
+                "equals": "[parameters('enabled')]"
+              }
+            ]
+          }
+        },
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "Deploy_activitylog_NSG_Delete",
+  "properties": {
+    "displayName": "Deploy Activity Log NSG Delete Alert",
+    "description": "Policy to Deploy Activity Log NSG Delete Alert",
+    "mode": "All",
+    "metadata": {
+      "source": "https://github.com/Azure/azure-monitor-baseline-alerts/",
+      "alzCloudEnvironments": [
+        "AzureCloud"
+      ],
+      "_deployed_by_amba": "True",
+      "category": "Network",
+      "version": "1.0.2"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "alertResourceGroupLocation": {
+        "metadata": {
+          "displayName": "Resource Group Location",
+          "description": "Location of the Resource group the alert is placed in"
+        },
+        "type": "String",
+        "defaultValue": "centralus"
+      },
+      "enabled": {
+        "metadata": {
+          "displayName": "Alert State",
+          "description": "Alert state for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "alertResourceGroupTags": {
+        "metadata": {
+          "displayName": "Resource Group Tags",
+          "description": "Tags on the Resource group the alert is placed in"
+        },
+        "type": "Object",
+        "defaultValue": {
+          "environment": "test",
+          "_deployed_by_amba": true
+        }
+      },
+      "MonitorDisable": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Tag name to disable monitoring on resource. Set to true if monitoring should be disabled"
+        },
+        "type": "String",
+        "defaultValue": "MonitorDisable"
+      },
+      "alertResourceGroupName": {
+        "metadata": {
+          "displayName": "Resource Group Name",
+          "description": "Resource group the alert is placed in"
+        },
+        "type": "String",
+        "defaultValue": "rg-amba-monitoring-001"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/networkSecurityGroups"
+          },
+          {
+            "field": "[concat('tags[', parameters('MonitorDisable'), ']')]",
+            "notEquals": "true"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "resourceGroupName": "[parameters('alertResourceGroupName')]",
+          "name": "ActivityNSGDelete",
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/ActivityLogAlerts/enabled",
+                "equals": "[parameters('enabled')]"
+              },
+              {
+                "equals": 2,
+                "count": {
+                  "field": "Microsoft.Insights/ActivityLogAlerts/condition.allOf[*]",
+                  "where": {
+                    "anyOf": [
+                      {
+                        "allOf": [
+                          {
+                            "field": "Microsoft.Insights/ActivityLogAlerts/condition.allOf[*].field",
+                            "equals": "category"
+                          },
+                          {
+                            "field": "Microsoft.Insights/ActivityLogAlerts/condition.allOf[*].equals",
+                            "equals": "Administrative"
+                          }
+                        ]
+                      },
+                      {
+                        "allOf": [
+                          {
+                            "field": "microsoft.insights/activityLogAlerts/condition.allOf[*].field",
+                            "equals": "operationName"
+                          },
+                          {
+                            "field": "microsoft.insights/activityLogAlerts/condition.allOf[*].equals",
+                            "equals": "Microsoft.Network/networkSecurityGroups/delete"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "deploymentScope": "subscription",
+          "type": "Microsoft.Insights/activityLogAlerts",
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "resources": [
+                  {
+                    "tags": "[parameters('alertResourceGroupTags')]",
+                    "apiVersion": "2021-04-01",
+                    "location": "[parameters('alertResourceGroupLocation')]",
+                    "type": "Microsoft.Resources/resourceGroups",
+                    "name": "[parameters('alertResourceGroupName')]"
+                  },
+                  {
+                    "resourceGroup": "[parameters('alertResourceGroupName')]",
+                    "properties": {
+                      "mode": "Incremental",
+                      "template": {
+                        "resources": [
+                          {
+                            "location": "global",
+                            "apiVersion": "2020-10-01",
+                            "properties": {
+                              "scopes": [
+                                "[subscription().id]"
+                              ],
+                              "enabled": "[parameters('enabled')]",
+                              "condition": {
+                                "allOf": [
+                                  {
+                                    "field": "category",
+                                    "equals": "Administrative"
+                                  },
+                                  {
+                                    "field": "operationName",
+                                    "equals": "Microsoft.Network/networkSecurityGroups/delete"
+                                  },
+                                  {
+                                    "field": "status",
+                                    "containsAny": [
+                                      "succeeded"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "description": "Activity Log NSG Delete",
+                              "parameters": {
+                                "enabled": {
+                                  "value": "[parameters('enabled')]"
+                                }
+                              }
+                            },
+                            "tags": {
+                              "_deployed_by_amba": true
+                            },
+                            "type": "microsoft.insights/activityLogAlerts",
+                            "name": "ActivityNSGDelete"
+                          }
+                        ],
+                        "contentVersion": "1.0.0.0",
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "variables": {},
+                        "parameters": {
+                          "alertResourceGroupName": {
+                            "type": "string"
+                          },
+                          "enabled": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "parameters": {
+                        "alertResourceGroupName": {
+                          "value": "[parameters('alertResourceGroupName')]"
+                        },
+                        "enabled": {
+                          "value": "[parameters('enabled')]"
+                        }
+                      }
+                    },
+                    "apiVersion": "2019-10-01",
+                    "type": "Microsoft.Resources/deployments",
+                    "dependsOn": [
+                      "[concat('Microsoft.Resources/resourceGroups/', parameters('alertResourceGroupName'))]"
+                    ],
+                    "name": "ActivityNSGDelete"
+                  }
+                ],
+                "contentVersion": "1.0.0.0",
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "variables": {},
+                "parameters": {
+                  "alertResourceGroupLocation": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "alertResourceGroupTags": {
+                    "type": "object"
+                  },
+                  "alertResourceGroupName": {
+                    "type": "string"
+                  }
+                }
+              },
+              "parameters": {
+                "alertResourceGroupLocation": {
+                  "value": "[parameters('alertResourceGroupLocation')]"
+                },
+                "enabled": {
+                  "value": "[parameters('enabled')]"
+                },
+                "alertResourceGroupTags": {
+                  "value": "[parameters('alertResourceGroupTags')]"
+                },
+                "alertResourceGroupName": {
+                  "value": "[parameters('alertResourceGroupName')]"
+                }
+              }
+            },
+            "location": "uksouth"
+          },
+          "existenceScope": "resourcegroup"
+        },
+        "effect": "deployIfNotExists"
+      }
+    }
+  }
+}

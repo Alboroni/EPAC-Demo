@@ -1,0 +1,361 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "Deploy_VM_HeartBeat_Alert_RG",
+  "properties": {
+    "displayName": "Deploy VM HeartBeat Alert",
+    "description": "Policy to audit/deploy VM HeartBeat Alert for VMs in the resource group",
+    "mode": "All",
+    "metadata": {
+      "source": "https://github.com/Azure/azure-monitor-baseline-alerts/",
+      "alzCloudEnvironments": [
+        "AzureCloud"
+      ],
+      "_deployed_by_amba": "True",
+      "category": "Compute",
+      "version": "1.0.1"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "timeAggregation": {
+        "metadata": {
+          "displayName": "TimeAggregation"
+        },
+        "allowedValues": [
+          "Average",
+          "Count",
+          "Maximum",
+          "Minimum",
+          "Total"
+        ],
+        "type": "String",
+        "defaultValue": "Average"
+      },
+      "autoResolveTime": {
+        "metadata": {
+          "displayName": "Auto Resolve",
+          "description": "Auto Resolve time for the alert in ISO 8601 format"
+        },
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "threshold": {
+        "metadata": {
+          "displayName": "Threshold",
+          "description": "Threshold for the alert"
+        },
+        "type": "String",
+        "defaultValue": "10"
+      },
+      "severity": {
+        "metadata": {
+          "displayName": "Severity",
+          "description": "Severity of the Alert"
+        },
+        "allowedValues": [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "type": "String",
+        "defaultValue": "1"
+      },
+      "MonitorDisable": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Tag name to disable monitoring resource. Set to true if monitoring should be disabled"
+        },
+        "type": "String",
+        "defaultValue": "MonitorDisable"
+      },
+      "evaluationFrequency": {
+        "metadata": {
+          "displayName": "Evaluation Frequency",
+          "description": "Evaluation frequency for the alert"
+        },
+        "allowedValues": [
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H"
+        ],
+        "type": "String",
+        "defaultValue": "PT5M"
+      },
+      "enabled": {
+        "metadata": {
+          "displayName": "Alert State",
+          "description": "Alert state for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "effect": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Effect of the policy"
+        },
+        "allowedValues": [
+          "deployIfNotExists",
+          "disabled"
+        ],
+        "type": "String",
+        "defaultValue": "deployIfNotExists"
+      },
+      "autoMitigate": {
+        "metadata": {
+          "displayName": "Auto Mitigate",
+          "description": "Auto Mitigate for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "autoResolve": {
+        "metadata": {
+          "displayName": "Auto Resolve",
+          "description": "Auto Resolve for the alert"
+        },
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "type": "String",
+        "defaultValue": "true"
+      },
+      "operator": {
+        "metadata": {
+          "displayName": "Operator"
+        },
+        "allowedValues": [
+          "Equals",
+          "GreaterThan",
+          "GreaterThanOrEqual",
+          "LessThan",
+          "LessThanOrEqual"
+        ],
+        "type": "String",
+        "defaultValue": "GreaterThan"
+      },
+      "windowSize": {
+        "metadata": {
+          "displayName": "Window Size",
+          "description": "Window size for the alert"
+        },
+        "allowedValues": [
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H",
+          "PT6H",
+          "PT12H",
+          "PT24H"
+        ],
+        "type": "String",
+        "defaultValue": "PT15M"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachines"
+          },
+          {
+            "field": "[concat('tags[', parameters('MonitorDisable'), ']')]",
+            "notEquals": "true"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "existenceCondition": {
+            "allOf": [
+              {
+                "field": "Microsoft.Insights/scheduledQueryRules/displayName",
+                "equals": "[concat(resourceGroup().name, '-VMHeartBeatAlert')]"
+              },
+              {
+                "field": "Microsoft.Insights/scheduledqueryrules/scopes[*]",
+                "equals": "[concat(subscription().id, '/resourceGroups/', resourceGroup().name)]"
+              },
+              {
+                "field": "Microsoft.Insights/scheduledqueryrules/enabled",
+                "equals": "[parameters('enabled')]"
+              }
+            ]
+          },
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "type": "Microsoft.Insights/scheduledQueryRules",
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "resources": [
+                  {
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2022-08-01-preview",
+                    "properties": {
+                      "enabled": "[parameters('enabled')]",
+                      "windowSize": "[parameters('windowSize')]",
+                      "severity": "[parameters('severity')]",
+                      "targetResourceTypes": [
+                        "Microsoft.Compute/virtualMachines"
+                      ],
+                      "parameters": {
+                        "autoResolve": {
+                          "value": "[parameters('autoResolve')]"
+                        },
+                        "severity": {
+                          "value": "[parameters('severity')]"
+                        },
+                        "enabled": {
+                          "value": "[parameters('enabled')]"
+                        },
+                        "autoResolveTime": {
+                          "value": "[parameters('autoResolveTime')]"
+                        },
+                        "autoMitigate": {
+                          "value": "[parameters('autoMitigate')]"
+                        },
+                        "windowSize": {
+                          "value": "[parameters('windowSize')]"
+                        },
+                        "evaluationFrequency": {
+                          "value": "[parameters('evaluationFrequency')]"
+                        },
+                        "threshold": {
+                          "value": "[parameters('threshold')]"
+                        }
+                      },
+                      "evaluationFrequency": "[parameters('evaluationFrequency')]",
+                      "displayName": "[concat(resourceGroup().name, '-VMHeartBeatAlert')]",
+                      "scopes": [
+                        "[resourceGroup().Id]"
+                      ],
+                      "ruleResolveConfiguration": {
+                        "timeToResolve": "[parameters('autoResolveTime')]",
+                        "autoResolved": "[parameters('autoResolve')]"
+                      },
+                      "autoMitigate": "[parameters('autoMitigate')]",
+                      "criteria": {
+                        "allOf": [
+                          {
+                            "metricMeasureColumn": "AggregatedValue",
+                            "operator": "[parameters('operator')]",
+                            "timeAggregation": "[parameters('timeAggregation')]",
+                            "query": "Heartbeat| summarize TimeGenerated=max(TimeGenerated) by Computer, _ResourceId| extend Duration = datetime_diff('minute',now(),TimeGenerated)| summarize AggregatedValue = min(Duration) by Computer, bin(TimeGenerated,5m), _ResourceId",
+                            "dimensions": [
+                              {
+                                "operator": "Include",
+                                "values": [
+                                  "*"
+                                ],
+                                "name": "Computer"
+                              }
+                            ],
+                            "failingPeriods": {
+                              "minFailingPeriodsToAlert": 1,
+                              "numberOfEvaluationPeriods": 1
+                            },
+                            "resourceIdColumn": "_ResourceId",
+                            "threshold": "[parameters('threshold')]"
+                          }
+                        ]
+                      },
+                      "description": "Log Alert for Virtual Machine Heartbeat"
+                    },
+                    "tags": {
+                      "_deployed_by_amba": true
+                    },
+                    "type": "Microsoft.Insights/scheduledQueryRules",
+                    "name": "[concat(resourceGroup().name, '-VMHeartBeatAlert')]"
+                  }
+                ],
+                "contentVersion": "1.0.0.0",
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "variables": {},
+                "parameters": {
+                  "timeAggregation": {
+                    "type": "String"
+                  },
+                  "autoResolveTime": {
+                    "type": "String"
+                  },
+                  "threshold": {
+                    "type": "String"
+                  },
+                  "severity": {
+                    "type": "String"
+                  },
+                  "evaluationFrequency": {
+                    "type": "String"
+                  },
+                  "enabled": {
+                    "type": "String"
+                  },
+                  "autoMitigate": {
+                    "type": "String"
+                  },
+                  "autoResolve": {
+                    "type": "String"
+                  },
+                  "operator": {
+                    "type": "String"
+                  },
+                  "windowSize": {
+                    "type": "String"
+                  }
+                }
+              },
+              "parameters": {
+                "timeAggregation": {
+                  "value": "[parameters('timeAggregation')]"
+                },
+                "autoResolveTime": {
+                  "value": "[parameters('autoResolveTime')]"
+                },
+                "threshold": {
+                  "value": "[parameters('threshold')]"
+                },
+                "severity": {
+                  "value": "[parameters('severity')]"
+                },
+                "evaluationFrequency": {
+                  "value": "[parameters('evaluationFrequency')]"
+                },
+                "enabled": {
+                  "value": "[parameters('enabled')]"
+                },
+                "autoMitigate": {
+                  "value": "[parameters('autoMitigate')]"
+                },
+                "autoResolve": {
+                  "value": "[parameters('autoResolve')]"
+                },
+                "operator": {
+                  "value": "[parameters('operator')]"
+                },
+                "windowSize": {
+                  "value": "[parameters('windowSize')]"
+                }
+              }
+            }
+          }
+        },
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

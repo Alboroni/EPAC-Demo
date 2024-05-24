@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "de184037-80d9-4264-9e99-e083354f48cc",
+  "properties": {
+    "displayName": "Azure Backup should be enabled for Azure Files",
+    "description": "Ensure protection of your Azure Virtual Machines by enabling Azure Backup. Azure Backup is a secure and cost effective data protection solution for Azure.",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Backup"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effect": {
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy"
+        },
+        "allowedValues": [
+          "AuditIfNotExists",
+          "Disabled"
+        ],
+        "type": "String",
+        "defaultValue": "AuditIfNotExists"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Storage/storageAccounts/fileServices/shares"
+          }
+        ]
+      },
+      "then": {
+        "details": {
+          "type": "Microsoft.RecoveryServices/backupprotecteditems"
+        },
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

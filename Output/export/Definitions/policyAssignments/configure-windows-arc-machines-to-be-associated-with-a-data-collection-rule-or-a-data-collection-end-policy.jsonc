@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyId": "/providers/Microsoft.Authorization/policyDefinitions/c24c537f-2516-4c2f-aac5-2cd26baa3d26",
+    "displayName": "Configure Windows Arc Machines to be associated with a Data Collection Rule or a Data Collection Endpoint"
+  },
+  "assignment": {
+    "name": "75c00bd9ef3445b18d6b2299",
+    "displayName": "Configure Windows Arc Machines to be associated with a Data Collection Rule or a Data Collection Endpoint",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "parameters": {
+    "dcrResourceId": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourceGroups/agstd/providers/Microsoft.Insights/dataCollectionRules/CapPerf"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d"
+    ]
+  }
+}

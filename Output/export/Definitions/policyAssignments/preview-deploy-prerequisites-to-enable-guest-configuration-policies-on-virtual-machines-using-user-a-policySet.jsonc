@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policySetId": "/providers/Microsoft.Authorization/policySetDefinitions/2b0ce52e-301c-4221-ab38-1601e2b4cee3",
+    "displayName": "[Preview]: Deploy prerequisites to enable Guest Configuration policies on virtual machines using user-assigned managed identity"
+  },
+  "assignment": {
+    "name": "9bda8f16acdf47869dde8c8f",
+    "displayName": "[Preview]: Deploy prerequisites to enable Guest Configuration policies on virtual machines using user-assigned managed identity",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  }
+}

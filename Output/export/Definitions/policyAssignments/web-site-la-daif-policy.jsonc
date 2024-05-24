@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "f947d3e5-1c02-49c7-b09d-43cab08d7d5b",
+    "displayName": "Web Site LA Daif"
+  },
+  "assignment": {
+    "name": "0f73e24d04e547bfbed9a040",
+    "displayName": "Web Site LA Daif",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {
+      "logAnalytics": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourcegroups/rg-log"
+    },
+    "assignedBy": "Alex Young"
+  },
+  "parameters": {
+    "logAnalytics": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourcegroups/rg-log/providers/microsoft.operationalinsights/workspaces/la-manage"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  }
+}

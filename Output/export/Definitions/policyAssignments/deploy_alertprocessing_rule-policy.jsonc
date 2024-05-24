@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_AlertProcessing_Rule",
+    "displayName": "Deploy Alert Processing Rule"
+  },
+  "assignment": {
+    "name": "f78b66a1343a4b49a6c5d62a",
+    "displayName": "Deploy Alert Processing Rule",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "parameters": {
+    "AMBAAGIdentifierUri": "api://366b2075-f97f-49c8-9f26-90d91b9bc48b",
+    "AMBAAGEHTenantId": "16a26745-6bc2-4593-941a-4e1b2a1af52c",
+    "AMBAAGServiceUri": "https://test.com",
+    "AMBAAGWHTenantId": "16a26745-6bc2-4593-941a-4e1b2a1af52c",
+    "AMBAAGuseAadAuth": "true",
+    "AMBAAGAADObjectId": "a30718d2-14f3-4700-a451-7f46ee2c45a3"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  }
+}

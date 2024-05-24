@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_VM_NetworkOut_Alert",
+    "displayName": "Deploy VM Network Write Alert"
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  },
+  "children": [
+    {
+      "nodeName": "/child-0",
+      "assignment": {
+        "name": "5c5dabc517d040118a257f90",
+        "displayName": "[DINE] Deploy VM Network Write Alert",
+        "description": ""
+      },
+      "scope": {
+        "tenant": [
+          "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+        ]
+      }
+    },
+    {
+      "nodeName": "/child-1",
+      "assignment": {
+        "name": "2291c3c6a5a341bf94fd0327",
+        "displayName": "[DINE] Deploy VM NetworkOut Alert",
+        "description": ""
+      },
+      "scope": {
+        "tenant": [
+          "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+        ]
+      }
+    },
+    {
+      "nodeName": "/child-2",
+      "assignment": {
+        "name": "38aa60fc161443dfbc5eb072",
+        "displayName": "Deploy VM Network Write Alert",
+        "description": ""
+      },
+      "scope": {
+        "tenant": [
+          "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d"
+        ]
+      }
+    }
+  ]
+}

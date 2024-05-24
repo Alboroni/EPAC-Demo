@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyId": "/providers/Microsoft.Authorization/policyDefinitions/244efd75-0d92-453c-b9a3-7d73ca36ed52",
+    "displayName": "Configure Windows Virtual Machines to be associated with a Data Collection Rule or a Data Collection Endpoint"
+  },
+  "assignment": {
+    "name": "babe78b54a604bb5b4e11147",
+    "displayName": "Configure Windows Virtual Machines to be associated with a Data Collection Rule or a Data Collection Endpoint",
+    "description": ""
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "System Administrator"
+  },
+  "parameters": {
+    "dcrResourceId": "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d/resourceGroups/rg-log/providers/microsoft.insights/dataCollectionRules/SentinelAMA"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  }
+}

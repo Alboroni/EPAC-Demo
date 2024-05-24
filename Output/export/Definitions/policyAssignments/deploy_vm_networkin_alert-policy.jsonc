@@ -1,0 +1,40 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_VM_NetworkIn_Alert",
+    "displayName": "Deploy VM Network Read Alert"
+  },
+  "metadata": {
+    "parameterScopes": {},
+    "assignedBy": "Alex Young"
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "tenant": [
+      "/providers/Microsoft.Management/managementGroups/AlexYoTop"
+    ]
+  },
+  "managedIdentityLocations": {
+    "tenant": "eastus"
+  },
+  "children": [
+    {
+      "nodeName": "/child-0",
+      "assignment": {
+        "name": "185a5fb41f4645c98485527c",
+        "displayName": "[DINE] Deploy VM Network Read Alert",
+        "description": ""
+      }
+    },
+    {
+      "nodeName": "/child-1",
+      "assignment": {
+        "name": "2a808b4ccf1248e9a8298bf7",
+        "displayName": "[DINE] Deploy VM Network Read Alert",
+        "description": ""
+      }
+    }
+  ]
+}
