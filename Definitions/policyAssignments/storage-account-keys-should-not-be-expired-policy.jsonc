@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyId": "/providers/Microsoft.Authorization/policyDefinitions/044985bb-afe1-42cd-8a36-9d5d42424537",
+    "displayName": "Storage account keys should not be expired"
+  },
+  "assignment": {
+    "name": "e00dfeec8b6b469ca51f9dc4",
+    "displayName": "Storage account keys should not be expired",
+    "description": ""
+  },
+  "metadata": {
+    "assignedBy": "Alex Young",
+    "parameterScopes": {}
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "epac-dev": [
+      "/providers/Microsoft.Management/managementGroups/EPAC-Dev"
+    ]
+  }
+}
