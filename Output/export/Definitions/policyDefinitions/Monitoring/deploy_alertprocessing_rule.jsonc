@@ -407,6 +407,9 @@
                 "contentVersion": "1.0.0.0",
                 "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                 "variables": {
+                  "varAMBAMonitorActionGroupArmRoleId": "[array(split(parameters('AMBAAGArmRoleId'),','))]",
+                  "varAMBAMonitorActionGroupEmail": "[array(split(parameters('AMBAMonitorActionGroupEmail'),','))]",
+                  "varAMBAEventHubResourceId": "[array(split(parameters('AMBAEventHubResourceId'),'/'))]",
                   "varActionGroupReceivers": {
                     "varWebhookReceiver": [
                       {
@@ -419,14 +422,12 @@
                         "name": "AMBAActionWebHook"
                       }
                     ],
-                    "varEventHubReceiver": [
+                    "varlogicAppReceivers": [
                       {
                         "useCommonAlertSchema": true,
-                        "subscriptionId": "[variables('varAMBAEventHubResourceId')[2]]",
-                        "tenantId": "[parameters('AMBAAGEHTenantId')]",
-                        "eventHubName": "[variables('varAMBAEventHubResourceId')[10]]",
-                        "eventHubNameSpace": "[variables('varAMBAEventHubResourceId')[8]]",
-                        "name": "AMBAActionEventHub"
+                        "callbackUrl": "[parameters('AMBAAGLogicAppcallbackUrl')]",
+                        "resourceId": "[parameters('AMBAAGLogicappResourceId')]",
+                        "name": "AMBAActionLogicApp"
                       }
                     ],
                     "varFunctionReceivers": [
@@ -438,18 +439,17 @@
                         "name": "AMBAActionFunction"
                       }
                     ],
-                    "varlogicAppReceivers": [
+                    "varEventHubReceiver": [
                       {
                         "useCommonAlertSchema": true,
-                        "callbackUrl": "[parameters('AMBAAGLogicAppcallbackUrl')]",
-                        "resourceId": "[parameters('AMBAAGLogicappResourceId')]",
-                        "name": "AMBAActionLogicApp"
+                        "subscriptionId": "[variables('varAMBAEventHubResourceId')[2]]",
+                        "tenantId": "[parameters('AMBAAGEHTenantId')]",
+                        "eventHubName": "[variables('varAMBAEventHubResourceId')[10]]",
+                        "eventHubNameSpace": "[variables('varAMBAEventHubResourceId')[8]]",
+                        "name": "AMBAActionEventHub"
                       }
                     ]
-                  },
-                  "varAMBAEventHubResourceId": "[array(split(parameters('AMBAEventHubResourceId'),'/'))]",
-                  "varAMBAMonitorActionGroupEmail": "[array(split(parameters('AMBAMonitorActionGroupEmail'),','))]",
-                  "varAMBAMonitorActionGroupArmRoleId": "[array(split(parameters('AMBAAGArmRoleId'),','))]"
+                  }
                 },
                 "parameters": {
                   "AMBAMonitorResourceGroupTags": {

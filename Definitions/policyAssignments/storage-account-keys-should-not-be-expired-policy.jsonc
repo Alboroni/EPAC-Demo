@@ -14,11 +14,10 @@
     "assignedBy": "Alex Young",
     "parameterScopes": {}
   },
+  "overrides": [],
+  "resourceSelectors": [],
   "scope": {
     "epac-dev": [
-      "/providers/Microsoft.Management/managementGroups/EPAC-Dev"
-    ],
-    "tenant": [
       "/providers/Microsoft.Management/managementGroups/EPAC-Dev"
     ]
   }
