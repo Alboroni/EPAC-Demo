@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-set-definition-schema.json",
+  "name": "ee24f2b6da25414bb20a4096",
+  "properties": {
+    "displayName": "DfE-publicIPaddresses-Pattern",
+    "metadata": {
+      "category": "DfEStandards"
+    },
+    "parameters": {
+      "resilientEffect": {
+        "type": "string",
+        "metadata": {
+          "displayName": "ResilientEffect"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "iPv4effect": {
+        "type": "string",
+        "metadata": {
+          "displayName": "IPv4effect"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "skuEffect": {
+        "type": "string",
+        "metadata": {
+          "displayName": "SKUEffect"
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      }
+    },
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "Public IP addresses should use Ipv4_1",
+        "policyDefinitionName": "5ce93301-8036-4d55-938e-0dce0a5bc892",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('IPv4effect')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "[Preview]: Public IP addresses should be Zone Resilient_1",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/682e4ab9-59fe-4871-9839-265b54c568c4",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('ResilientEffect')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "Public IP addresses should use standard SKU_1",
+        "policyDefinitionName": "1ad22501-8036-4d55-938e-0dce0a5bc892",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('SKUEffect')]"
+          }
+        }
+      }
+    ],
+    "policyDefinitionGroups": []
+  }
+}

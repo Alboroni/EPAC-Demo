@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policySetName": "ee24f2b6da25414bb20a4096",
+    "displayName": "DfE-publicIPaddresses-Pattern"
+  },
+  "assignment": {
+    "name": "7b1290ec88c54f26930294e0",
+    "displayName": "DfE-publicIPaddresses-Pattern",
+    "description": ""
+  },
+  "metadata": {
+    "assignedBy": "Alex Young",
+    "parameterScopes": {}
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "epac-dev": [
+      "/providers/Microsoft.Management/managementGroups/EPAC-Dev"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-definition-schema.json",
+  "name": "1ad22501-8036-4d55-938e-0dce0a5bc892",
+  "properties": {
+    "displayName": "Public IP addresses should use standard SKU",
+    "description": "Public IP addressess should use standard SKU.",
+    "mode": "Indexed",
+    "metadata": {
+      "category": "Custom",
+      "version": "1.0.0",
+      "deployedBy": "epac/00000000-0000-0000-0000-000000000999/epac-dev"
+    },
+    "parameters": {
+      "effect": {
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit",
+        "type": "string",
+        "metadata": {
+          "description": "This parameter lets you choose the effect of the policy. If you choose Audit (default), the policy will only audit resources for compliance. If you choose Deny, the policy will deny the creation of non-compliant resources. If you choose Disabled, the policy will not enforce compliance (useful, for example, as a second assignment to ignore a subset of non-compliant resources in a single resource group).",
+          "displayName": "Effect"
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/publicipaddresses"
+          },
+          {
+            "field": "Microsoft.Network/publicIPAddresses/sku.tier",
+            "notEquals": "Standard"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

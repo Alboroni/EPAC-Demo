@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyName": "Deploy_VM_NetworkOut_Alert",
+    "displayName": null
+  },
+  "assignment": {
+    "name": "38aa60fc161443dfbc5eb072",
+    "displayName": "Deploy VM Network Write Alert",
+    "description": ""
+  },
+  "metadata": {
+    "assignedBy": "Alex Young",
+    "parameterScopes": {}
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "epac-dev": [
+      "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d"
+    ]
+  },
+  "managedIdentityLocations": {
+    "epac-dev": "eastus"
+  }
+}

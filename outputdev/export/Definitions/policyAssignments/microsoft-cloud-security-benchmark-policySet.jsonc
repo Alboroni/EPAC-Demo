@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policySetId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
+    "displayName": "Microsoft cloud security benchmark"
+  },
+  "assignment": {
+    "name": "ASC Default 63ac0509-3112-457c-ba36-11a70921975d",
+    "displayName": "Defender for Cloud Default 63ac0509-3112-457c-ba36-11a70921975d",
+    "description": ""
+  },
+  "scope": {
+    "epac-dev": [
+      "/subscriptions/63ac0509-3112-457c-ba36-11a70921975d"
+    ]
+  }
+}
