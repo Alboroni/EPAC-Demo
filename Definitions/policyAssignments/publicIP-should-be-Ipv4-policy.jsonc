@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/enterprise-azure-policy-as-code/main/Schemas/policy-assignment-schema.json",
+  "nodeName": "/root",
+  "definitionEntry": {
+    "policyId": "/providers/Microsoft.Authorization/policyDefinitions/5ce93301-8036-4d55-938e-0dce0a5bc892",
+    "displayName": "Public IP addresses should use Ipv4"
+  },
+  "assignment": {
+    "name": "e00dfeec8b6b469ca51f9dc8",
+    "displayName": "Public IP addresses should use Ipv4",
+    "description": ""
+  },
+  "metadata": {
+    "assignedBy": "Alex Young",
+    "parameterScopes": {}
+  },
+  "overrides": [],
+  "resourceSelectors": [],
+  "scope": {
+    "epac-dev": [
+      "/providers/Microsoft.Management/managementGroups/EPAC-Dev"
+    ]
+  }
+}
